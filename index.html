@@ -82,4 +82,50 @@ Aqui, você pode explicar exemplos, contar uma história ou dar dicas relacionad
 
 ✅ CONCLUSÃO:
 Agora que você já entendeu melhor sobre ${tema}, fica mais fácil aplicar esse conhecimento na prática.
-Se esse conteúdo te ajudou, deixa o like, se inscreve no canal e compartilha com alguém que
+Se esse conteúdo te ajudou, deixa o like, se inscreve no canal e compartilha com alguém que precisa ver isso.
+
+👋 ENCERRAMENTO:
+"Valeu por assistir até aqui e a gente se vê no próximo vídeo!"`;
+  }
+
+  if (tipo === "pdf") {
+    texto = `📄 DOCUMENTO PROFISSIONAL
+
+Tema: ${tema}
+Contato: ${telefone}
+
+INTRODUÇÃO:
+Este documento foi criado para apresentar informações completas e claras sobre ${tema}, com o objetivo de facilitar o entendimento do leitor.
+
+DESENVOLVIMENTO:
+O tema ${tema} possui diversos aspectos importantes que devem ser analisados com atenção.
+Ao longo deste documento, são apresentados conceitos, explicações e pontos relevantes, permitindo uma compreensão aprofundada do assunto.
+
+CONCLUSÃO:
+Com base nas informações apresentadas, é possível concluir que ${tema} é um assunto relevante e que merece atenção, seja para estudo, trabalho ou uso profissional.`;
+  }
+
+  if (tipo === "trabalho") {
+    texto = `🎓 TRABALHO ESCOLAR
+
+Aluno: ${nome}
+Série: ${serie}
+Tema: ${tema}
+
+INTRODUÇÃO:
+Este trabalho tem como objetivo explicar o tema ${tema}, apresentando seus principais conceitos de forma simples e educativa.
+
+DESENVOLVIMENTO:
+O tema ${tema} é estudado para compreender melhor como ele funciona e qual sua importância.
+Durante o desenvolvimento, são apresentados fatos, explicações e exemplos relacionados ao assunto.
+
+CONCLUSÃO:
+Com este trabalho, foi possível aprender mais sobre ${tema} e entender sua importância para o aprendizado do aluno.`;
+  }
+
+  document.getElementById("resultado").innerText = texto;
+}
+</script>
+
+</body>
+</html>
