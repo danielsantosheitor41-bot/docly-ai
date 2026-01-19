@@ -28,7 +28,7 @@ header {
 }
 .card {
   background: #1e293b;
-  padding: 15px;
+  padding: 20px;
   border-radius: 12px;
   margin-bottom: 15px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
@@ -57,6 +57,8 @@ header {
   white-space: pre-wrap;
   margin-top:10px;
   font-size:16px;
+  max-height:400px;
+  overflow-y:auto;
 }
 /* Timeline Styles */
 .timeline {
@@ -100,11 +102,12 @@ header {
     <option value="roteiro">🎬 Roteiro de Vídeo</option>
     <option value="pdf">📄 Documento / PDF</option>
     <option value="trabalho">🎓 Trabalho Escolar</option>
+    <option value="curriculo">💼 Currículo</option>
     <option value="documento">✍️ Documento Geral</option>
     <option value="historia">📖 História</option>
   </select>
 
-  <input id="nome" placeholder="Nome do aluno (Trabalho Escolar)">
+  <input id="nome" placeholder="Nome do aluno / usuário">
   <input id="serie" placeholder="Série / Ano (Trabalho Escolar)">
   <input id="telefone" placeholder="Telefone (PDF)">
   <textarea id="tema" placeholder="Tema / Assunto"></textarea>
@@ -121,8 +124,8 @@ header {
 </div>
 
 <script>
-const palavrasSensiveis = ["violência extrema","drogas ilegais","ataques","conteúdo ilegal"]; // Temas proibidos
-const usuarios = {}; // Guarda infrações por ID
+const palavrasSensiveis = ["violência extrema","drogas ilegais","ataques","conteúdo ilegal"];
+const usuarios = {};
 
 function gerar() {
   const tipo = document.getElementById("tipo").value;
@@ -136,7 +139,6 @@ function gerar() {
   if(!tipo){ alert("Escolha um tipo de conteúdo"); return; }
   if(!tema){ alert("Digite um tema ou assunto"); return; }
 
-  // ID do usuário temporário no navegador
   const usuarioId = "user_local"; 
   if(!usuarios[usuarioId]) usuarios[usuarioId] = { cont:0, bloqueio:0 };
 
@@ -147,7 +149,6 @@ function gerar() {
     return;
   }
 
-  // Verifica temas proibidos
   if(palavrasSensiveis.some(p => tema.toLowerCase().includes(p))){
     usuarios[usuarioId].cont += 1;
     const horas = Math.pow(2, usuarios[usuarioId].cont-1);
@@ -159,28 +160,34 @@ function gerar() {
   let texto = "";
   timeline.innerHTML = "";
 
+  // Conteúdo detalhado
   if(tipo === "roteiro"){
-    texto = `🎬 ROTEIRO COMPLETO DE VÍDEO\n\n🎤 ABERTURA:\n"Fala pessoal! Hoje vamos falar sobre ${tema}."\n\n📌 INTRODUÇÃO:\nExploraremos tudo sobre ${tema}.\n\n📚 DESENVOLVIMENTO:\n1. Explicação detalhada\n2. Exemplos\n3. Dicas úteis\n\n✅ CONCLUSÃO:\nResumo final\n\n👋 ENCERRAMENTO:\n"Valeu por assistir!"`;
+    texto = `🎬 ROTEIRO COMPLETO DE VÍDEO\n\nABERTURA:\nOlá! Hoje falaremos sobre ${tema}.\n\nINTRODUÇÃO:\nVamos detalhar o tema de forma completa.\n\nDESENVOLVIMENTO:\n- Passo 1: explicação detalhada\n- Passo 2: exemplos práticos\n- Passo 3: dicas e truques\n\nCONCLUSÃO:\nResumo e principais pontos\n\nENCERRAMENTO:\nObrigado por assistir!`;
     timeline.innerHTML = `<div class="timeline-step">Abertura</div><div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div><div class="timeline-step">Encerramento</div>`;
   }
 
   if(tipo === "pdf"){
-    texto = `📄 DOCUMENTO PROFISSIONAL\nTema: ${tema}\nTelefone: ${telefone}\n\nINTRODUÇÃO:\nDetalhes do tema ${tema}.\n\nDESENVOLVIMENTO:\nConceitos e exemplos.\n\nCONCLUSÃO:\nResumo completo.`;
+    texto = `📄 PDF PROFISSIONAL\nTema: ${tema}\nTelefone: ${telefone}\n\nINTRODUÇÃO:\nDetalhes do tema ${tema}.\n\nDESENVOLVIMENTO:\nExplicação detalhada, exemplos, tabelas e informações completas.\n\nCONCLUSÃO:\nResumo final e próximos passos.`;
     timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div>`;
   }
 
   if(tipo === "trabalho"){
-    texto = `🎓 TRABALHO ESCOLAR\nAluno: ${nome}\nSérie: ${serie}\nTema: ${tema}\n\nINTRODUÇÃO:\nExplicação do tema.\n\nDESENVOLVIMENTO:\nFatos e exemplos detalhados.\n\nCONCLUSÃO:\nCompreensão final do tema.`;
+    texto = `🎓 TRABALHO ESCOLAR\nAluno: ${nome}\nSérie: ${serie}\nTema: ${tema}\n\nINTRODUÇÃO:\nApresentação do tema com contexto.\n\nDESENVOLVIMENTO:\nSeção detalhada com exemplos, fatos e explicações.\n\nCONCLUSÃO:\nSíntese do trabalho e aprendizado.`;
     timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div>`;
   }
 
+  if(tipo === "curriculo"){
+    texto = `💼 CURRÍCULO PROFISSIONAL\nNome: ${nome}\nContato: ${telefone}\n\nOBJETIVO:\n${tema}\n\nEXPERIÊNCIA:\n- Cargo 1: descrição detalhada\n- Cargo 2: descrição detalhada\n\nFORMAÇÃO:\n- Curso / Instituição\n- Ano\n\nHABILIDADES:\n- Habilidade 1\n- Habilidade 2`;
+    timeline.innerHTML = `<div class="timeline-step">Objetivo</div><div class="timeline-step">Experiência</div><div class="timeline-step">Formação</div><div class="timeline-step">Habilidades</div>`;
+  }
+
   if(tipo === "documento"){
-    texto = `✍️ DOCUMENTO GERAL\nTema: ${tema}\n\nConteúdo completo e objetivo sobre ${tema}.`;
+    texto = `✍️ DOCUMENTO GERAL\nTema: ${tema}\n\nConteúdo detalhado, organizado por seções, pronto para uso profissional.`;
     timeline.innerHTML = `<div class="timeline-step">Conteúdo</div>`;
   }
 
   if(tipo === "historia"){
-    texto = `📖 HISTÓRIA ORIGINAL\nTema: ${tema}\n\nINTRODUÇÃO:\nEra uma vez no mundo de ${tema}...\n\nDESENVOLVIMENTO:\nA história segue aventuras únicas e desafios.\n\nCLÍMAX:\nMomento de tensão e virada.\n\nCONCLUSÃO:\nFinal memorável e original.`;
+    texto = `📖 HISTÓRIA ORIGINAL\nTema: ${tema}\n\nINTRODUÇÃO:\nEra uma vez em ${tema}, um mundo cheio de aventuras...\n\nDESENVOLVIMENTO:\nO personagem principal enfrenta desafios, faz aliados e descobre segredos.\n\nCLÍMAX:\nMomento de tensão e decisão importante.\n\nCONCLUSÃO:\nFinal memorável, lições aprendidas e desfecho original.`;
     timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Clímax</div><div class="timeline-step">Conclusão</div>`;
   }
 
@@ -189,4 +196,4 @@ function gerar() {
 </script>
 
 </body>
-  </html>
+</html>
