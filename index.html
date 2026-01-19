@@ -5,19 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Docly AI - Criador de Conteúdo IA</title>
 <style>
-/* Corpo e header */
 body {font-family:'Arial',sans-serif; margin:0; padding:0; background:#f0f2f5; color:#1f2937;}
 header {text-align:center; padding:20px; background:linear-gradient(90deg,#3b82f6,#6366f1); color:white; font-size:26px; font-weight:bold; box-shadow:0 4px 6px rgba(0,0,0,0.1);}
 .container {max-width:1000px; margin:20px auto; padding:15px;}
-
-/* Cards de input */
 .card {background:white; border-radius:16px; padding:25px; margin-bottom:20px; box-shadow:0 6px 15px rgba(0,0,0,0.1);}
 .card input,.card textarea,.card select,.card button {width:100%; margin:10px 0; padding:14px; border-radius:10px; border:1px solid #d1d5db; font-size:16px;}
 .card button {background:#10b981; color:white; font-weight:bold; cursor:pointer; transition:0.3s;}
 .card button:hover {background:#059669;}
 #resultado {background:#1f2937; color:#f8fafc; padding:20px; border-radius:16px; white-space: pre-wrap; margin-top:15px; max-height:400px; overflow-y:auto; font-size:16px;}
-
-/* Timeline moderna */
 .timeline {display:flex; flex-direction:column; align-items:center; margin-top:25px; transition:all 0.3s ease;}
 .timeline-step {background:linear-gradient(135deg,#3b82f6,#6366f1); color:white; padding:14px; margin:10px 0; border-radius:12px; text-align:center; font-weight:bold; width:200px; transition:all 0.3s ease; box-shadow:0 4px 8px rgba(0,0,0,0.15);}
 .timeline-step.active {background:linear-gradient(135deg,#f59e0b,#f97316); transform:scale(1.05); box-shadow:0 6px 15px rgba(0,0,0,0.2);}
@@ -60,7 +55,6 @@ header {text-align:center; padding:20px; background:linear-gradient(90deg,#3b82f
 </div>
 
 <script>
-// Palavras sensíveis e sistema de bloqueio
 const palavrasSensiveis = ["violência extrema","drogas ilegais","ataques","conteúdo ilegal"];
 const usuarios = {};
 
@@ -119,7 +113,6 @@ async function gerar() {
   // Cria timeline
   timeline.innerHTML = etapas.map(e => `<div class="timeline-step">${e}</div>`).join("");
 
-  // Chamada API (recomenda-se usar backend para evitar CORS)
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method:"POST",
@@ -137,14 +130,15 @@ async function gerar() {
     const data = await response.json();
     console.log(data); // debug
 
-    if(data && data.choices && data.choices.length > 0 && data.choices[0].message){
+    // Tenta mostrar qualquer conteúdo que vier, sem exibir erros
+    if(data?.choices?.[0]?.message?.content){
       resultado.innerText = data.choices[0].message.content;
       document.querySelectorAll(".timeline-step").forEach(step => step.classList.add("active"));
-    } else {
-      resultado.innerText = "❌ Erro: A API não retornou conteúdo. Verifique sua chave ou backend.";
     }
+
   } catch(err){
-    resultado.innerText = "❌ Erro ao gerar conteúdo: "+err;
+    // Nenhuma mensagem de erro é mostrada
+    console.log("Erro na API:", err);
   }
 }
 </script>
