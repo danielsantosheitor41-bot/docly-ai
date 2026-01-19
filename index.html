@@ -7,157 +7,126 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-// ---------- FRONTEND ----------
+/* ================= FRONTEND ================= */
+
 app.get("/", (req, res) => {
   res.send(`
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Currículo com IA</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #e5e7eb; /* cinza */
-  margin: 0;
-}
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 40px 20px;
-}
-.card {
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 10px;
-  border: 2px solid #2563eb; /* borda azul */
-}
-h1 {
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-p {
-  color: #555;
-}
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 20px;
-}
-textarea {
-  width: 100%;
-  height: 130px;
-  margin-top: 8px;
-  padding: 12px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: 2px solid #2563eb;
-  resize: vertical;
-}
-button {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  font-size: 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-button:hover {
-  background: #1e4ed8;
-}
-pre {
-  background: #f9fafb;
-  padding: 20px;
-  border-radius: 6px;
-  white-space: pre-wrap;
-  margin-top: 15px;
-  border: 2px solid #2563eb;
-}
-.timer {
-  margin-top: 15px;
-  font-weight: bold;
-  color: #2563eb;
-}
-.footer {
-  text-align: center;
-  margin-top: 30px;
-  color: #555;
-  font-size: 14px;
-}
+  body {
+    background: #e5e7eb;
+    font-family: Arial, sans-serif;
+  }
+  .box {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #f9fafb;
+    padding: 25px;
+    border: 2px solid #2563eb;
+    border-radius: 10px;
+  }
+  textarea {
+    width: 100%;
+    height: 120px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 2px solid #2563eb;
+    border-radius: 6px;
+  }
+  button {
+    background: #2563eb;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
+  #timer {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #2563eb;
+  }
+  #resultado {
+    margin-top: 15px;
+    padding: 15px;
+    border: 2px solid #2563eb;
+    border-radius: 6px;
+    white-space: pre-wrap;
+  }
 </style>
 </head>
-
 <body>
-  <div class="container">
-    <div class="card">
-      <h1>Seu currículo feito sob medida para cada vaga</h1>
-      <p>
-        Cole seu currículo e a descrição da vaga.
-        A IA adapta o texto para passar em ATS e chamar atenção do recrutador.
-      </p>
 
-      <label>Seu currículo</label>
-      <textarea id="curriculo" placeholder="Cole aqui seu currículo"></textarea>
+<div class="box">
+  <h2>Seu currículo feito sob medida para cada vaga</h2>
 
-      <label>Descrição da vaga</label>
-      <textarea id="vaga" placeholder="Cole aqui a vaga desejada"></textarea>
+  <label>Seu currículo</label>
+  <textarea id="curriculo"></textarea>
 
-      <button onclick="gerar()">Gerar currículo otimizado</button>
+  <label>Descrição da vaga</label>
+  <textarea id="vaga"></textarea>
 
-      <div class="timer" id="timer"></div>
+  <button onclick="gerar()">Gerar currículo otimizado</button>
 
-      <label>Resultado</label>
-      <pre id="resultado">Aguardando...</pre>
-    </div>
-
-    <div class="footer">
-      MVP • Currículo com IA • Produto validável
-    </div>
-  </div>
+  <div id="timer"></div>
+  <div id="resultado">Aguardando...</div>
+</div>
 
 <script>
-let countdown;
+let respostaIA = null;
+let intervalo = null;
 
 async function gerar() {
   const resultado = document.getElementById("resultado");
-  const timerEl = document.getElementById("timer");
+  const timer = document.getElementById("timer");
 
-  let tempo = 30; // segundos
-  timerEl.innerText = "⏳ Gerando... " + tempo + "s restantes";
+  respostaIA = null;
+  resultado.innerText = "⏳ Processando currículo com IA...";
 
-  clearInterval(countdown);
-  countdown = setInterval(() => {
-    tempo--;
-    timerEl.innerText = "⏳ Gerando... " + tempo + "s restantes";
-    if (tempo <= 0) clearInterval(countdown);
-  }, 1000);
+  let tempo = 30;
+  timer.innerText = "⏳ Gerando... " + tempo + "s";
 
-  resultado.innerText = "Processando currículo com IA...";
+  clearInterval(intervalo);
 
-  const res = await fetch("/gerar", {
+  fetch("/gerar", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       curriculo: document.getElementById("curriculo").value,
       vaga: document.getElementById("vaga").value
     })
+  })
+  .then(res => res.json())
+  .then(data => {
+    respostaIA = data.resultado;
   });
 
-  const data = await res.json();
-  clearInterval(countdown);
-  timerEl.innerText = "✅ Concluído";
-  resultado.innerText = data.resultado;
+  intervalo = setInterval(() => {
+    tempo--;
+    timer.innerText = "⏳ Gerando... " + tempo + "s";
+
+    if (tempo <= 0) {
+      clearInterval(intervalo);
+      timer.innerText = "✅ Concluído";
+      resultado.innerText = respostaIA || "Erro ao gerar currículo.";
+    }
+  }, 1000);
 }
 </script>
+
 </body>
 </html>
 `);
 });
 
-// ---------- BACKEND + IA ----------
+/* ================= BACKEND + IA ================= */
+
 app.post("/gerar", async (req, res) => {
   const { curriculo, vaga } = req.body;
 
@@ -166,13 +135,16 @@ app.post("/gerar", async (req, res) => {
   }
 
   const prompt = `
-Você é um recrutador sênior especialista em ATS.
-Reescreva o currículo abaixo para a vaga descrita.
+Você é um recrutador especialista em ATS.
 
-Regras:
-- Use palavras-chave da vaga
-- Linguagem profissional
-- Destaque resultados
+Reescreva o currículo abaixo para a vaga informada.
+
+REGRAS OBRIGATÓRIAS:
+- Retorne APENAS o currículo final
+- NÃO escreva títulos, explicações ou comentários
+- NÃO diga "Aqui está" ou semelhantes
+- Linguagem profissional e direta
+- Destaque palavras-chave da vaga
 - Não invente experiências
 
 CURRÍCULO:
@@ -196,13 +168,15 @@ ${vaga}
     });
 
     const data = await response.json();
-    res.json({ resultado: data.choices[0].message.content });
-  } catch {
+    res.json({ resultado: data.choices[0].message.content.trim() });
+
+  } catch (err) {
     res.json({ resultado: "Erro ao gerar currículo." });
   }
 });
 
-// ---------- SERVIDOR ----------
+/* ================= SERVER ================= */
+
 app.listen(PORT, () => {
-  console.log("Servidor rodando em http://localhost:" + PORT);
+  console.log("Servidor rodando na porta " + PORT);
 });
