@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Docly AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6c63ff">
+<style>
+body{margin:0;font-family:Arial;background:#0f1020;color:#fff}
+.hidden{display:none}
+section{padding:40px;max-width:1100px;margin:auto}
+button{padding:12px 20px;border-radius:8px;border:none;font-weight:bold;cursor:pointer}
+.primary{background:#6c63ff;color:#fff}
+.outline{background:none;border:2px solid #6c63ff;color:#6c63ff}
+.card{background:#1b1c3a;padding:20px;border-radius:12px;margin-bottom:20px}
+input,textarea,select{width:100%;padding:10px;border-radius:6px;border:none;margin:8px 0}
+#output{white-space:pre-wrap;background:#111;padding:15px;border-radius:8px}
+nav{display:flex;gap:15px;margin-bottom:20px}
+nav button{flex:1}
+</style>
+</head>
+<body>
+
+<section id="login">
+<h1>Docly AI</h1>
+<p>Crie documentos com IA</p>
+<input id="username" placeholder="Seu nome">
+<button class="primary" onclick="login()">Entrar</button>
+</section>
+
+<section id="app" class="hidden">
+<nav>
+<button onclick="show('create')">Criar</button>
+<button onclick="show('history')">Histórico</button>
+<button onclick="togglePremium()">Premium</button>
+</nav>
+
+<div id="create">
+<div class="card">
+<select id="type">
+<option>Roteiro de vídeo</option>
+<option>Trabalho escolar</option>
+<option>PDF profissional</option>
+<option>E-book</option>
+<option>Proposta comercial</option>
+</select>
+<input id="theme" placeholder="Tema do documento">
+<button class="primary" onclick="generate()">Gerar com IA</button>
+</div>
+
+<p id="limitMsg" style="color:#ff8080"></p>
+<div id="output" class="hidden"></div>
+<button id="exportBtn" class="outline hidden" onclick="exportDoc()">Exportar</button>
+</div>
+
+<div id="history" class="hidden">
+<h2>Histórico</h2>
+<div id="historyList"></div>
+</div>
+
+<div id="premiumBox" class="hidden card">
+<h3>Premium ativado 🎉</h3>
+<p>Criações ilimitadas desbloqueadas.</p>
+</div>
+
+</section>
+
+<script>
+let user = localStorage.getItem("docly_user");
+let premium = localStorage.getItem("docly_premium") === "true";
+let uses = 0;
+let history = JSON.parse(localStorage.getItem("docly_history") || "[]");
+
+if(user) startApp();
+
+function login(){
+  user = document.getElementById("username").value;
+  if(!user) return alert("Digite seu nome");
+  localStorage.setItem("docly_user", user);
+  startApp();
+}
+
+function startApp(){
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+  if(premium) document.getElementById("premiumBox").classList.remove("hidden");
+  renderHistory();
+}
+
+function show(id){
+  document.getElementById("create").classList.add("hidden");
+  document.getElementById("history").classList.add("hidden");
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function generate(){
+  if(!premium && uses >= 3){
+    document.getElementById("limitMsg").innerText =
+    "Limite gratuito atingido. Ative o Premium.";
+    return;
+  }
+
+  const type = document.getElementById("type").value;
+  const theme = document.getElementById("theme").value;
+  if(!theme) return alert("Digite um tema");
+
+  uses++;
+
+  const text =
+`${type}
+Tema: ${theme}
+
+Introdução:
+Este documento foi criado com o Docly AI.
+
+Desenvolvimento:
+Conteúdo estruturado, profissional e otimizado
+para uso real, economizando horas de trabalho.
+
+Conclusão:
+Material pronto para entrega ou publicação.`;
+
+  document.getElementById("output").innerText = text;
+  document.getElementById("output").classList.remove("hidden");
+  document.getElementById("exportBtn").classList.remove("hidden");
+
+  history.push(text);
+  localStorage.setItem("docly_history", JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory(){
+  const list = document.getElementById("historyList");
+  list.innerHTML = "";
+  history.forEach(h=>{
+    const div = document.createElement("div");
+    div.className="card";
+    div.innerText = h.substring(0,80)+"...";
+    div.onclick=()=>alert(h);
+    list.appendChild(div);
+  });
+}
+
+function togglePremium(){
+  premium = true;
+  localStorage.setItem("docly_premium","true");
+  document.getElementById("premiumBox").classList.remove("hidden");
+}
+
+function exportDoc(){
+  const blob = new Blob([document.getElementById("output").innerText],
+  {type:"text/plain"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "docly_documento.txt";
+  a.click();
+}
+</script>
+
+</body>
+  </html>
