@@ -1,77 +1,192 @@
-Imagine que você é um engenheiro de software, designer UX/UI e especialista em Inteligência Artificial. Seu objetivo é criar a **versão definitiva** do aplicativo Docly AI, levando-o do nível 1 até o nível máximo 2880. O aplicativo deve ser totalmente profissional, seguro, responsivo e pronto para monetização.  
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docly AI - Level MAX</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin:0; padding:0;
+  background: linear-gradient(135deg,#0f172a,#1e293b);
+  color: #f8fafc;
+  min-height: 100vh;
+}
+header {
+  text-align:center;
+  padding:20px;
+  background: linear-gradient(90deg,#22c55e,#3b82f6);
+  font-size: 1.8em;
+  font-weight:bold;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 15px;
+}
+.card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.card input, .card textarea, .card select, .card button {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+.card button {
+  background: #22c55e;
+  font-weight:bold;
+  cursor:pointer;
+  transition: all 0.3s;
+}
+.card button:hover {
+  background:#16a34a;
+}
+#resultado {
+  background:#020617;
+  padding:15px;
+  border-radius:12px;
+  white-space: pre-wrap;
+  margin-top:10px;
+  font-size:16px;
+}
+/* Timeline Styles */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+.timeline-step {
+  background: #1e293b;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid #22c55e;
+  border-radius: 8px;
+}
+@media(min-width: 768px){
+  .timeline {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .timeline-step {
+    flex: 1 1 45%;
+    margin-right: 10px;
+    margin-bottom: 15px;
+  }
+}
+@media (max-width:600px){
+  header { font-size:1.4em; padding:15px; }
+  .card input, .card textarea, .card select, .card button { font-size:14px; padding:10px; }
+}
+</style>
+</head>
+<body>
 
-**Objetivos do App:**
-- Criar documentos, PDFs, roteiros, trabalhos escolares e histórias originais com IA.
-- Gerar histórias sobre qualquer tema permitido, incluindo adultos ou heróis.
-- Alertar e suspender usuários que tentem gerar conteúdo proibido.
-- Interface moderna, clean e mobile-first, adaptável para PC e Android.
+<header>📄 Docly AI - Level MAX</header>
 
-**1️⃣ UX / Design**
-- Interface limpa, moderna, com gradientes suaves, sombras e ícones para cada tipo de conteúdo.
-- Cards separados: Roteiro, PDF, Trabalho Escolar, Documento Geral, História.
-- Inputs claros, placeholders inteligentes e botões grandes chamativos.
-- Timeline visual adaptável:
-  - **PC:** horizontal, cada etapa como card.
-  - **Celular:** vertical, stack de cards.
-- Preview do conteúdo gerado antes de download.
-- Feedback visual durante geração (“Gerando conteúdo…”).
+<div class="container">
 
-**2️⃣ Tipos de Conteúdo**
-- **Roteiro:** abertura, introdução, desenvolvimento, conclusão, encerramento, falas, CTA, dicas de câmera.
-- **PDF Profissional:** tema, telefone, conteúdo longo, exportável como PDF, sem censura.
-- **Trabalho Escolar:** nome, série, tema, introdução, desenvolvimento, conclusão, referências.
-- **Documento Geral:** adaptável a qualquer objetivo, tom ajustável (formal, criativo, acadêmico).
-- **História:** original, introdução, desenvolvimento, clímax, conclusão. Qualquer tema permitido.
+<div class="card">
+  <select id="tipo">
+    <option value="">Escolha o tipo de conteúdo</option>
+    <option value="roteiro">🎬 Roteiro de Vídeo</option>
+    <option value="pdf">📄 Documento / PDF</option>
+    <option value="trabalho">🎓 Trabalho Escolar</option>
+    <option value="documento">✍️ Documento Geral</option>
+    <option value="historia">📖 História</option>
+  </select>
 
-**3️⃣ IA e Conteúdo**
-- Conteúdo 100% original, não genérico.
-- Capaz de gerar textos longos e estruturados automaticamente.
-- Temas proibidos devem ser detectados.
-- Sistema de aviso e suspensão progressiva para usuários infratores:
-  - Aviso imediato na tela.
-  - Suspensão de 1 hora na primeira infração.
-  - Suspensão dobra a cada infração subsequente.
-  - Reset automático após expiração do bloqueio.
+  <input id="nome" placeholder="Nome do aluno (Trabalho Escolar)">
+  <input id="serie" placeholder="Série / Ano (Trabalho Escolar)">
+  <input id="telefone" placeholder="Telefone (PDF)">
+  <textarea id="tema" placeholder="Tema / Assunto"></textarea>
 
-**4️⃣ Sistema de Usuário (localStorage ou futuro backend)**
-- Armazenar identificador único do usuário (ID, nome, email, etc.).
-- Registrar número de infrações e tempo de bloqueio.
-- Garantir que usuários bloqueados não gerem conteúdo até a expiração da suspensão.
+  <button onclick="gerar()">Gerar Conteúdo</button>
+</div>
 
-**5️⃣ Limites e Monetização**
-- Modelo freemium:
-  - Gratuito: limite diário, marca d’água nos PDFs.
-  - Premium: ilimitado, PDFs sem marca d’água, templates avançados, histórico completo.
-- Teste grátis de 3 dias.
-- CTA claros: “Desbloquear Premium”, “Criar PDF Profissional”, “Gerar Roteiro Completo”.
-- Mensagens de valor constantes: “Economize horas de trabalho”, “Conteúdo pronto para uso imediato”.
+<div class="card">
+  <pre id="resultado">O conteúdo gerado aparecerá aqui...</pre>
+</div>
 
-**6️⃣ Responsividade e Compatibilidade**
-- Funciona perfeitamente em Android, tablets e PC.
-- Layout adaptável: timeline horizontal em PC, vertical em celular.
-- Inputs e botões responsivos, legíveis em qualquer tela.
-- Fluxo rápido de geração de conteúdo (menos cliques).
+<div class="timeline" id="timeline"></div>
 
-**7️⃣ Exportação e Download**
-- PDF real para download.
-- TXT para roteiros e histórias.
-- Preview antes de baixar.
-- Compatível com impressão e compartilhamento.
+</div>
 
-**8️⃣ Backend Futuro (opcional)**
-- Sistema de login para salvar histórico real.
-- Integração futura com pagamentos.
-- Servidor para alertas e suspensão, se não usar localStorage.
+<script>
+const palavrasSensiveis = ["violência extrema","drogas ilegais","ataques","conteúdo ilegal"]; // Temas proibidos
+const usuarios = {}; // Guarda infrações por ID
 
-**9️⃣ Resultado Esperado**
-- Aplicativo web totalmente profissional, viciante, funcional.
-- Conteúdo original para todos os tipos.
-- Sistema de alerta e suspensão seguro.
-- Visual premium, timeline adaptável, mobile-first.
-- Pronto para monetização, Level MAX 2880.
+function gerar() {
+  const tipo = document.getElementById("tipo").value;
+  const nome = document.getElementById("nome").value;
+  const serie = document.getElementById("serie").value;
+  const telefone = document.getElementById("telefone").value;
+  const tema = document.getElementById("tema").value;
+  const resultado = document.getElementById("resultado");
+  const timeline = document.getElementById("timeline");
 
-**Instruções Extras**
-- Use cores e design que transmitam profissionalismo.
-- Evite textos genéricos ou repetitivos.
-- Garanta velocidade e fluidez no uso.
-- Prepare o código para fácil atualização futura.
+  if(!tipo){ alert("Escolha um tipo de conteúdo"); return; }
+  if(!tema){ alert("Digite um tema ou assunto"); return; }
+
+  // ID do usuário temporário no navegador
+  const usuarioId = "user_local"; 
+  if(!usuarios[usuarioId]) usuarios[usuarioId] = { cont:0, bloqueio:0 };
+
+  const agora = Date.now();
+  if(usuarios[usuarioId].bloqueio > agora){
+    const hora = new Date(usuarios[usuarioId].bloqueio).toLocaleTimeString();
+    alert(`Você está suspenso até ${hora} por tentar gerar conteúdo proibido.`);
+    return;
+  }
+
+  // Verifica temas proibidos
+  if(palavrasSensiveis.some(p => tema.toLowerCase().includes(p))){
+    usuarios[usuarioId].cont += 1;
+    const horas = Math.pow(2, usuarios[usuarioId].cont-1);
+    usuarios[usuarioId].bloqueio = agora + horas*60*60*1000;
+    alert(`Tema proibido detectado! Você será suspenso por ${horas} hora(s).`);
+    return;
+  }
+
+  let texto = "";
+  timeline.innerHTML = "";
+
+  if(tipo === "roteiro"){
+    texto = `🎬 ROTEIRO COMPLETO DE VÍDEO\n\n🎤 ABERTURA:\n"Fala pessoal! Hoje vamos falar sobre ${tema}."\n\n📌 INTRODUÇÃO:\nExploraremos tudo sobre ${tema}.\n\n📚 DESENVOLVIMENTO:\n1. Explicação detalhada\n2. Exemplos\n3. Dicas úteis\n\n✅ CONCLUSÃO:\nResumo final\n\n👋 ENCERRAMENTO:\n"Valeu por assistir!"`;
+    timeline.innerHTML = `<div class="timeline-step">Abertura</div><div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div><div class="timeline-step">Encerramento</div>`;
+  }
+
+  if(tipo === "pdf"){
+    texto = `📄 DOCUMENTO PROFISSIONAL\nTema: ${tema}\nTelefone: ${telefone}\n\nINTRODUÇÃO:\nDetalhes do tema ${tema}.\n\nDESENVOLVIMENTO:\nConceitos e exemplos.\n\nCONCLUSÃO:\nResumo completo.`;
+    timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div>`;
+  }
+
+  if(tipo === "trabalho"){
+    texto = `🎓 TRABALHO ESCOLAR\nAluno: ${nome}\nSérie: ${serie}\nTema: ${tema}\n\nINTRODUÇÃO:\nExplicação do tema.\n\nDESENVOLVIMENTO:\nFatos e exemplos detalhados.\n\nCONCLUSÃO:\nCompreensão final do tema.`;
+    timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div>`;
+  }
+
+  if(tipo === "documento"){
+    texto = `✍️ DOCUMENTO GERAL\nTema: ${tema}\n\nConteúdo completo e objetivo sobre ${tema}.`;
+    timeline.innerHTML = `<div class="timeline-step">Conteúdo</div>`;
+  }
+
+  if(tipo === "historia"){
+    texto = `📖 HISTÓRIA ORIGINAL\nTema: ${tema}\n\nINTRODUÇÃO:\nEra uma vez no mundo de ${tema}...\n\nDESENVOLVIMENTO:\nA história segue aventuras únicas e desafios.\n\nCLÍMAX:\nMomento de tensão e virada.\n\nCONCLUSÃO:\nFinal memorável e original.`;
+    timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Clímax</div><div class="timeline-step">Conclusão</div>`;
+  }
+
+  resultado.innerText = texto;
+}
+</script>
+
+</body>
+  </html>
