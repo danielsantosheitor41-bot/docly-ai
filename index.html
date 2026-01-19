@@ -10,179 +10,156 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 /* ================= FRONTEND ================= */
 
 app.get("/", (req, res) => {
-  res.send(`
-<!DOCTYPE html>
+  res.send(`<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <title>Currículo com IA</title>
 <style>
-  body {
-    background: #e5e7eb;
-    font-family: Arial, sans-serif;
-  }
-  .box {
-    max-width: 600px;
-    margin: 40px auto;
-    background: #f9fafb;
-    padding: 25px;
-    border: 2px solid #2563eb;
-    border-radius: 10px;
-  }
-  textarea {
-    width: 100%;
-    height: 120px;
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 2px solid #2563eb;
-    border-radius: 6px;
-  }
-  button {
-    background: #2563eb;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-  }
-  #timer {
-    margin-top: 15px;
-    font-weight: bold;
-    color: #2563eb;
-  }
-  #resultado {
-    margin-top: 15px;
-    padding: 15px;
-    border: 2px solid #2563eb;
-    border-radius: 6px;
-    white-space: pre-wrap;
-  }
+body {
+  background:#e5e7eb;
+  font-family: Arial, sans-serif;
+}
+.box {
+  max-width:600px;
+  margin:40px auto;
+  background:#f9fafb;
+  padding:25px;
+  border:2px solid #2563eb;
+  border-radius:10px;
+}
+textarea {
+  width:100%;
+  height:120px;
+  margin-bottom:15px;
+  padding:10px;
+  border:2px solid #2563eb;
+  border-radius:6px;
+}
+button {
+  width:100%;
+  padding:12px;
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  font-size:16px;
+}
+#timer {
+  margin-top:12px;
+  font-weight:bold;
+  color:#2563eb;
+}
+#resultado {
+  margin-top:15px;
+  padding:15px;
+  border:2px solid #2563eb;
+  border-radius:6px;
+  white-space:pre-wrap;
+}
 </style>
 </head>
 <body>
 
 <div class="box">
-  <h2>Seu currículo feito sob medida para cada vaga</h2>
+<h2>Seu currículo feito sob medida para cada vaga</h2>
 
-  <label>Seu currículo</label>
-  <textarea id="curriculo"></textarea>
+<textarea id="curriculo" placeholder="Cole seu currículo"></textarea>
+<textarea id="vaga" placeholder="Cole a descrição da vaga"></textarea>
 
-  <label>Descrição da vaga</label>
-  <textarea id="vaga"></textarea>
+<button onclick="gerar()">Gerar currículo otimizado</button>
 
-  <button onclick="gerar()">Gerar currículo otimizado</button>
-
-  <div id="timer"></div>
-  <div id="resultado">Aguardando...</div>
+<div id="timer"></div>
+<div id="resultado"></div>
 </div>
 
 <script>
-let respostaIA = "";
-let intervalo = null;
+let respostaIA = null;
+let tempoFinalizado = false;
 
 function gerar() {
+  respostaIA = null;
+  tempoFinalizado = false;
+
   const resultado = document.getElementById("resultado");
   const timer = document.getElementById("timer");
 
-  resultado.innerText = "⏳ Processando currículo com IA...";
-  respostaIA = "";
-
+  resultado.innerText = "";
   let tempo = 20;
   timer.innerText = "⏳ Gerando... " + tempo + "s";
 
-  clearInterval(intervalo);
-
   fetch("/gerar", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({
       curriculo: document.getElementById("curriculo").value,
       vaga: document.getElementById("vaga").value
     })
   })
-  .then(res => res.json())
-  .then(data => {
-    respostaIA = data.resultado || "Erro ao gerar currículo.";
+  .then(r => r.json())
+  .then(d => {
+    respostaIA = d.resultado;
+    if (tempoFinalizado) resultado.innerText = respostaIA;
   });
 
-  intervalo = setInterval(() => {
+  const intervalo = setInterval(() => {
     tempo--;
     timer.innerText = "⏳ Gerando... " + tempo + "s";
 
     if (tempo <= 0) {
       clearInterval(intervalo);
+      tempoFinalizado = true;
       timer.innerText = "✅ Concluído";
-      resultado.innerText = respostaIA;
+      if (respostaIA) resultado.innerText = respostaIA;
     }
   }, 1000);
 }
 </script>
 
 </body>
-</html>
-`);
+</html>`);
 });
 
-/* ================= BACKEND + IA (SEM ERRO) ================= */
+/* ================= BACKEND ================= */
 
 app.post("/gerar", async (req, res) => {
   const { curriculo, vaga } = req.body;
 
   if (!curriculo || !vaga) {
-    return res.json({ resultado: "Preencha o currículo e a vaga." });
+    return res.json({ resultado: "Preencha os campos." });
   }
 
-  const prompt = `
-Reescreva o currículo abaixo para a vaga informada.
-
-REGRAS:
-- Retorne SOMENTE o currículo final
-- NÃO inclua títulos, comentários ou explicações
-- NÃO escreva frases introdutórias
-- Linguagem profissional e objetiva
-- Use palavras-chave da vaga
-- Não invente experiências
+  try {
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":`Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model:"gpt-3.5-turbo",
+        messages:[{
+          role:"user",
+          content:`Reescreva o currículo abaixo para a vaga informada.
+Retorne SOMENTE o currículo final.
+Não explique nada.
 
 CURRÍCULO:
 ${curriculo}
 
 VAGA:
-${vaga}
-`;
-
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: \`Bearer \${OPENAI_API_KEY}\`
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.3
+${vaga}`
+        }],
+        temperature:0.3
       })
     });
 
-    const data = await response.json();
+    const data = await r.json();
+    res.json({ resultado: data.choices?.[0]?.message?.content || "Erro ao gerar." });
 
-    if (!data.choices || !data.choices[0]) {
-      return res.json({ resultado: "Erro ao gerar currículo." });
-    }
-
-    res.json({
-      resultado: data.choices[0].message.content.trim()
-    });
-
-  } catch (err) {
-    res.json({ resultado: "Erro ao gerar currículo." });
+  } catch {
+    res.json({ resultado: "Erro ao gerar." });
   }
 });
 
-/* ================= SERVER ================= */
-
-app.listen(PORT, () => {
-  console.log("Servidor rodando na porta " + PORT);
-});
+app.listen(PORT, () => console.log("Rodando na porta", PORT));
