@@ -1,217 +1,85 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Docly AI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg,#5f2cff,#3a7bd5);
-      margin: 0;
-      padding: 0;
-      color: #fff;
-    }
-
-    header {
-      padding: 20px;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    .container {
-      padding: 15px;
-    }
-
-    .card {
-      background: #ffffff;
-      color: #000;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-
-    .card h2 {
-      margin-top: 0;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #5f2cff;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #4720c9;
-    }
-
-    .premium {
-      background: gold;
-      color: black;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .output {
-      margin-top: 15px;
-      background: #f5f5f5;
-      color: #000;
-      padding: 15px;
-      border-radius: 10px;
-      white-space: pre-wrap;
-    }
-
-    .watermark {
-      margin-top: 10px;
-      font-size: 12px;
-      opacity: 0.5;
-      text-align: center;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Docly AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 20px;
+}
+h1 {
+  text-align: center;
+}
+select, input, textarea, button {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+button {
+  background: #22c55e;
+  font-weight: bold;
+  cursor: pointer;
+}
+pre {
+  background: #020617;
+  padding: 15px;
+  white-space: pre-wrap;
+  border-radius: 10px;
+}
+</style>
 </head>
 
 <body>
 
-<header>
-  <h1>Docly AI</h1>
-  <p>Criação inteligente de documentos</p>
-</header>
+<h1>📄 Docly AI</h1>
 
-<div class="container">
+<select id="tipo">
+  <option value="">Escolha o tipo de conteúdo</option>
+  <option value="roteiro">🎬 Roteiro de Vídeo</option>
+  <option value="pdf">📄 Documento / PDF</option>
+  <option value="trabalho">🎓 Trabalho Escolar</option>
+</select>
 
-  <div class="card">
-    <h2>🎓 Trabalho Escolar</h2>
-    <input id="nomeAluno" placeholder="Nome do aluno">
-    <input id="serieAluno" placeholder="Série / Ano">
-    <textarea id="temaTrabalho" placeholder="Tema do trabalho"></textarea>
-    <button onclick="gerarTrabalho()">Gerar Trabalho</button>
-  </div>
+<input id="nome" placeholder="Nome do aluno (trabalho escolar)">
+<input id="serie" placeholder="Série / Ano (trabalho escolar)">
+<input id="telefone" placeholder="Telefone (PDF)">
+<textarea id="tema" placeholder="Tema / Assunto"></textarea>
 
-  <div class="card">
-    <h2>📄 PDF Profissional</h2>
-    <input id="telefone" placeholder="Telefone">
-    <textarea id="temaPdf" placeholder="Tema do PDF"></textarea>
-    <button onclick="gerarPdf()">Gerar PDF</button>
-  </div>
+<button onclick="gerar()">Gerar Conteúdo</button>
 
-  <div class="card">
-    <h2>🎬 Roteiro de Vídeo</h2>
-    <textarea id="temaRoteiro" placeholder="Tema do vídeo"></textarea>
-    <button onclick="gerarRoteiro()">Gerar Roteiro</button>
-  </div>
-
-  <div class="card">
-    <h2>💎 Premium</h2>
-    <p>Desbloqueie documentos ilimitados e PDFs sem marca d’água.</p>
-    <button class="premium">Desbloquear Premium</button>
-  </div>
-
-  <div id="resultado" class="output"></div>
-  <div id="marca" class="watermark"></div>
-
-</div>
+<pre id="resultado"></pre>
 
 <script>
-  let limite = localStorage.getItem("limite") || 3;
+function gerar() {
+  const tipo = document.getElementById("tipo").value;
+  const nome = document.getElementById("nome").value;
+  const serie = document.getElementById("serie").value;
+  const telefone = document.getElementById("telefone").value;
+  const tema = document.getElementById("tema").value;
 
-  function verificarLimite() {
-    if (limite <= 0) {
-      alert("Limite diário atingido. Desbloqueie o Premium.");
-      return false;
-    }
-    limite--;
-    localStorage.setItem("limite", limite);
-    return true;
-  }
+  let texto = "";
 
-  function gerarTrabalho() {
-    if (!verificarLimite()) return;
+  if (tipo === "roteiro") {
+    texto = `🎬 ROTEIRO COMPLETO DE VÍDEO
 
-    let nome = document.getElementById("nomeAluno").value;
-    let serie = document.getElementById("serieAluno").value;
-    let tema = document.getElementById("temaTrabalho").value;
+🎤 ABERTURA (FALA):
+"Fala pessoal! Hoje eu quero conversar com vocês sobre ${tema}. Se você já teve dúvidas sobre isso, fica comigo até o final porque esse vídeo vai te ajudar muito."
 
-    document.getElementById("resultado").innerText =
-`TRABALHO ESCOLAR
+📌 INTRODUÇÃO:
+No vídeo de hoje, vamos explicar de forma simples e direta tudo o que você precisa saber sobre ${tema}, com exemplos claros e informações úteis.
 
-Aluno: ${nome}
-Série: ${serie}
+📚 DESENVOLVIMENTO:
+Primeiro, é importante entender o que é ${tema}. Esse assunto está presente no nosso dia a dia e influencia diretamente várias situações.
+Ao longo do tempo, ${tema} foi ganhando importância por causa dos seus impactos e aplicações práticas.
+Aqui, você pode explicar exemplos, contar uma história ou dar dicas relacionadas ao tema.
 
-Tema: ${tema}
-
-Introdução:
-Este trabalho aborda o tema "${tema}", explicando seus principais conceitos.
-
-Desenvolvimento:
-Aqui será apresentado um conteúdo claro e organizado sobre o tema.
-
-Conclusão:
-O tema é importante para o aprendizado do aluno.`;
-
-    document.getElementById("marca").innerText = "Gerado com Docly AI (versão gratuita)";
-  }
-
-  function gerarPdf() {
-    if (!verificarLimite()) return;
-
-    let telefone = document.getElementById("telefone").value;
-    let tema = document.getElementById("temaPdf").value;
-
-    document.getElementById("resultado").innerText =
-`PDF PROFISSIONAL
-
-Telefone: ${telefone}
-
-Tema: ${tema}
-
-Conteúdo profissional gerado automaticamente, pronto para exportação em PDF.`;
-
-    document.getElementById("marca").innerText = "Marca d’água ativa – Plano Gratuito";
-  }
-
-  function gerarRoteiro() {
-    if (!verificarLimite()) return;
-
-    let tema = document.getElementById("temaRoteiro").value;
-
-    document.getElementById("resultado").innerText =
-`ROTEIRO DE VÍDEO
-
-Tema: ${tema}
-
-Abertura:
-Apresente o tema de forma chamativa.
-
-Desenvolvimento:
-Explique o conteúdo com clareza.
-
-Encerramento:
-Convide o público a interagir.`;
-
-    document.getElementById("marca").innerText = "Docly AI – limite gratuito";
-  }
-</script>
-
-</body>
-</html>
+✅ CONCLUSÃO:
+Agora que você já entendeu melhor sobre ${tema}, fica mais fácil aplicar esse conhecimento na prática.
+Se esse conteúdo te ajudou, deixa o like, se inscreve no canal e compartilha com alguém que
