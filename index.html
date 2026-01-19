@@ -3,96 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Docly AI - Level MAX</title>
+<title>Docly AI - Criador de Conteúdo IA</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  margin:0; padding:0;
-  background: linear-gradient(135deg,#0f172a,#1e293b);
-  color: #f8fafc;
-  min-height: 100vh;
-}
-header {
-  text-align:center;
-  padding:20px;
-  background: linear-gradient(90deg,#22c55e,#3b82f6);
-  font-size: 1.8em;
-  font-weight:bold;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-.container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 15px;
-}
-.card {
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-.card input, .card textarea, .card select, .card button {
-  width: 100%;
-  margin: 8px 0;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  font-size: 16px;
-}
-.card button {
-  background: #22c55e;
-  font-weight:bold;
-  cursor:pointer;
-  transition: all 0.3s;
-}
-.card button:hover {
-  background:#16a34a;
-}
-#resultado {
-  background:#020617;
-  padding:15px;
-  border-radius:12px;
-  white-space: pre-wrap;
-  margin-top:10px;
-  font-size:16px;
-  max-height:400px;
-  overflow-y:auto;
-}
-/* Timeline Styles */
-.timeline {
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-}
-.timeline-step {
-  background: #1e293b;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-left: 4px solid #22c55e;
-  border-radius: 8px;
-}
-@media(min-width: 768px){
-  .timeline {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .timeline-step {
-    flex: 1 1 45%;
-    margin-right: 10px;
-    margin-bottom: 15px;
-  }
-}
-@media (max-width:600px){
-  header { font-size:1.4em; padding:15px; }
-  .card input, .card textarea, .card select, .card button { font-size:14px; padding:10px; }
-}
+body {font-family: Arial,sans-serif;margin:0;padding:0;background:#f4f6f9;color:#333;}
+header {text-align:center;padding:20px;background:linear-gradient(90deg,#6a11cb,#2575fc);color:white;font-size:24px;font-weight:bold;}
+.container {max-width:1000px;margin:20px auto;padding:15px;}
+.card {background:white;border-radius:12px;padding:20px;margin-bottom:15px;box-shadow:0 4px 12px rgba(0,0,0,0.1);}
+.card input,.card textarea,.card select,.card button {width:100%;margin:8px 0;padding:12px;border-radius:8px;border:1px solid #ccc;font-size:16px;}
+.card button {background:#22c55e;color:white;font-weight:bold;cursor:pointer;transition:0.3s;}
+.card button:hover {background:#16a34a;}
+#resultado {background:#020617;color:#f8fafc;padding:15px;border-radius:12px;white-space: pre-wrap;margin-top:10px;max-height:400px;overflow-y:auto;font-size:16px;}
+.timeline {display:flex;flex-direction:column;align-items:center;margin-top:20px;transition:all 0.3s ease;}
+.timeline-step {background:#1e293b;color:white;padding:12px;margin:8px 0;border-left:4px solid #22c55e;border-radius:8px;text-align:center;transition:all 0.3s ease;}
+.timeline-step.active {border-left:4px solid #3b82f6; background:#2563eb;}
+@media(min-width:768px){.timeline{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:15px;}.timeline-step{flex:1 1 180px;margin:5px;}}
 </style>
 </head>
 <body>
 
-<header>📄 Docly AI - Level MAX</header>
+<header>Docly AI - Criador de Conteúdo IA</header>
 
 <div class="container">
 
@@ -100,16 +29,15 @@ header {
   <select id="tipo">
     <option value="">Escolha o tipo de conteúdo</option>
     <option value="roteiro">🎬 Roteiro de Vídeo</option>
-    <option value="pdf">📄 Documento / PDF</option>
+    <option value="pdf">📄 PDF / Documento</option>
     <option value="trabalho">🎓 Trabalho Escolar</option>
     <option value="curriculo">💼 Currículo</option>
-    <option value="documento">✍️ Documento Geral</option>
     <option value="historia">📖 História</option>
   </select>
 
-  <input id="nome" placeholder="Nome do aluno / usuário">
+  <input id="nome" placeholder="Nome do usuário / aluno">
   <input id="serie" placeholder="Série / Ano (Trabalho Escolar)">
-  <input id="telefone" placeholder="Telefone (PDF)">
+  <input id="telefone" placeholder="Telefone / Contato (PDF ou Currículo)">
   <textarea id="tema" placeholder="Tema / Assunto"></textarea>
 
   <button onclick="gerar()">Gerar Conteúdo</button>
@@ -124,10 +52,11 @@ header {
 </div>
 
 <script>
+// Temas proibidos
 const palavrasSensiveis = ["violência extrema","drogas ilegais","ataques","conteúdo ilegal"];
 const usuarios = {};
 
-function gerar() {
+async function gerar() {
   const tipo = document.getElementById("tipo").value;
   const nome = document.getElementById("nome").value;
   const serie = document.getElementById("serie").value;
@@ -141,7 +70,6 @@ function gerar() {
 
   const usuarioId = "user_local"; 
   if(!usuarios[usuarioId]) usuarios[usuarioId] = { cont:0, bloqueio:0 };
-
   const agora = Date.now();
   if(usuarios[usuarioId].bloqueio > agora){
     const hora = new Date(usuarios[usuarioId].bloqueio).toLocaleTimeString();
@@ -157,41 +85,55 @@ function gerar() {
     return;
   }
 
-  let texto = "";
+  resultado.innerText = "⏳ Gerando conteúdo com IA... aguarde!";
   timeline.innerHTML = "";
 
-  // Conteúdo detalhado
+  let prompt = "";
+  let etapas = [];
+
   if(tipo === "roteiro"){
-    texto = `🎬 ROTEIRO COMPLETO DE VÍDEO\n\nABERTURA:\nOlá! Hoje falaremos sobre ${tema}.\n\nINTRODUÇÃO:\nVamos detalhar o tema de forma completa.\n\nDESENVOLVIMENTO:\n- Passo 1: explicação detalhada\n- Passo 2: exemplos práticos\n- Passo 3: dicas e truques\n\nCONCLUSÃO:\nResumo e principais pontos\n\nENCERRAMENTO:\nObrigado por assistir!`;
-    timeline.innerHTML = `<div class="timeline-step">Abertura</div><div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div><div class="timeline-step">Encerramento</div>`;
+    prompt = `Crie um roteiro completo de vídeo sobre o tema: ${tema}. Inclua abertura, introdução, desenvolvimento, clímax, conclusão.`;
+    etapas = ["Abertura","Introdução","Desenvolvimento","Clímax","Conclusão"];
+  } else if(tipo === "pdf"){
+    prompt = `Crie um PDF profissional sobre o tema: ${tema}. Inclua telefone/contato: ${telefone}, introdução, desenvolvimento e conclusão.`;
+    etapas = ["Introdução","Desenvolvimento","Conclusão"];
+  } else if(tipo === "trabalho"){
+    prompt = `Crie um trabalho escolar detalhado para o aluno ${nome}, série ${serie}, sobre o tema ${tema}. Inclua introdução, desenvolvimento, conclusão e referências.`;
+    etapas = ["Introdução","Desenvolvimento","Conclusão"];
+  } else if(tipo === "curriculo"){
+    prompt = `Crie um currículo profissional para ${nome}, telefone/contato: ${telefone}, objetivo: ${tema}. Inclua experiência, formação e habilidades detalhadas.`;
+    etapas = ["Objetivo","Experiência","Formação","Habilidades"];
+  } else if(tipo === "historia"){
+    prompt = `Crie uma história original sobre o tema ${tema}. Inclua introdução, desenvolvimento, clímax e conclusão detalhados.`;
+    etapas = ["Introdução","Desenvolvimento","Clímax","Conclusão"];
   }
 
-  if(tipo === "pdf"){
-    texto = `📄 PDF PROFISSIONAL\nTema: ${tema}\nTelefone: ${telefone}\n\nINTRODUÇÃO:\nDetalhes do tema ${tema}.\n\nDESENVOLVIMENTO:\nExplicação detalhada, exemplos, tabelas e informações completas.\n\nCONCLUSÃO:\nResumo final e próximos passos.`;
-    timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div>`;
-  }
+  // Cria timeline visual
+  timeline.innerHTML = etapas.map(e => `<div class="timeline-step">${e}</div>`).join("");
 
-  if(tipo === "trabalho"){
-    texto = `🎓 TRABALHO ESCOLAR\nAluno: ${nome}\nSérie: ${serie}\nTema: ${tema}\n\nINTRODUÇÃO:\nApresentação do tema com contexto.\n\nDESENVOLVIMENTO:\nSeção detalhada com exemplos, fatos e explicações.\n\nCONCLUSÃO:\nSíntese do trabalho e aprendizado.`;
-    timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Conclusão</div>`;
-  }
+  // Chamada IA OpenAI
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer SUA_CHAVE_API_AQUI"
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        messages: [{role:"user", content: prompt}],
+        max_tokens: 3000
+      })
+    });
+    const data = await response.json();
+    resultado.innerText = data.choices[0].message.content;
 
-  if(tipo === "curriculo"){
-    texto = `💼 CURRÍCULO PROFISSIONAL\nNome: ${nome}\nContato: ${telefone}\n\nOBJETIVO:\n${tema}\n\nEXPERIÊNCIA:\n- Cargo 1: descrição detalhada\n- Cargo 2: descrição detalhada\n\nFORMAÇÃO:\n- Curso / Instituição\n- Ano\n\nHABILIDADES:\n- Habilidade 1\n- Habilidade 2`;
-    timeline.innerHTML = `<div class="timeline-step">Objetivo</div><div class="timeline-step">Experiência</div><div class="timeline-step">Formação</div><div class="timeline-step">Habilidades</div>`;
-  }
+    // Marca cada etapa como concluída
+    document.querySelectorAll(".timeline-step").forEach(step => step.classList.add("active"));
 
-  if(tipo === "documento"){
-    texto = `✍️ DOCUMENTO GERAL\nTema: ${tema}\n\nConteúdo detalhado, organizado por seções, pronto para uso profissional.`;
-    timeline.innerHTML = `<div class="timeline-step">Conteúdo</div>`;
+  } catch(err){
+    resultado.innerText = "❌ Erro ao gerar conteúdo: "+err;
   }
-
-  if(tipo === "historia"){
-    texto = `📖 HISTÓRIA ORIGINAL\nTema: ${tema}\n\nINTRODUÇÃO:\nEra uma vez em ${tema}, um mundo cheio de aventuras...\n\nDESENVOLVIMENTO:\nO personagem principal enfrenta desafios, faz aliados e descobre segredos.\n\nCLÍMAX:\nMomento de tensão e decisão importante.\n\nCONCLUSÃO:\nFinal memorável, lições aprendidas e desfecho original.`;
-    timeline.innerHTML = `<div class="timeline-step">Introdução</div><div class="timeline-step">Desenvolvimento</div><div class="timeline-step">Clímax</div><div class="timeline-step">Conclusão</div>`;
-  }
-
-  resultado.innerText = texto;
 }
 </script>
 
