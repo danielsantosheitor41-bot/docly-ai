@@ -1,102 +1,177 @@
-<!DOCTYPE html><html lang="pt-BR">
+/**
+ * PROJETO COMPLETO – CURRÍCULO COM IA
+ * Inclui:
+ * 1. Landing Page
+ * 2. Gerador de currículo
+ * 3. Backend
+ * 4. Integração com IA
+ * 5. Interface
+ * 6. Pronto para deploy
+ */
+
+import express from "express";
+import fetch from "node-fetch";
+
+const app = express();
+app.use(express.json());
+
+const PORT = process.env.PORT || 3000;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+// ---------- FRONTEND ----------
+app.get("/", (req, res) => {
+  res.send(`
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meu Dia a Dia Perfeito</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-    header {
-      padding: 20px;
-      background: linear-gradient(90deg, #2563eb, #9333ea);
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    main {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    }
-    .card h2 {
-      margin-top: 0;
-      font-size: 1.2rem;
-      color: #93c5fd;
-    }
-    ul {
-      padding-left: 18px;
-    }
-    li {
-      margin-bottom: 8px;
-    }
-    footer {
-      text-align: center;
-      padding: 15px;
-      background: #020617;
-      color: #94a3b8;
-      font-size: 0.9rem;
-    }
-    .btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 14px;
-      background: #2563eb;
-      color: white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    .btn:hover {
-      background: #1d4ed8;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>Currículo com IA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px;
+}
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+p {
+  color: #555;
+}
+textarea {
+  width: 100%;
+  height: 130px;
+  margin: 12px 0;
+  padding: 12px;
+  font-size: 14px;
+}
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background: #1e4ed8;
+}
+pre {
+  background: #f1f5f9;
+  padding: 20px;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  margin-top: 20px;
+}
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  color: #777;
+  font-size: 14px;
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <h1>🌟 Meu Site do Dia a Dia</h1>
-    <p>Organização, ideias e foco em um só lugar</p>
-  </header>  <main>
+  <div class="container">
     <div class="card">
-      <h2>📅 Rotina Diária</h2>
-      <ul>
-        <li>Acordar e organizar o dia</li>
-        <li>Estudos / Trabalho</li>
-        <li>Pausa para descanso</li>
-        <li>Lazer e aprendizado</li>
-      </ul>
-    </div><div class="card">
-  <h2>🧠 Ideias Rápidas</h2>
-  <ul>
-    <li>Criar conteúdo (vídeo, post, arte)</li>
-    <li>Aprender algo novo</li>
-    <li>Planejar objetivos da semana</li>
-  </ul>
-</div>
+      <h1>Seu currículo feito sob medida para cada vaga</h1>
+      <p>
+        Cole seu currículo e a descrição da vaga.  
+        A IA otimiza o texto para passar em ATS e chamar atenção do recrutador.
+      </p>
 
-<div class="card">
-  <h2>🎮 Lazer</h2>
-  <ul>
-    <li>Jogar Minecraft</li>
-    <li>Assistir vídeos</li>
-    <li>Ouvir música</li>
-  </ul>
-</div>
+      <h3>📄 Seu currículo</h3>
+      <textarea id="curriculo" placeholder="Cole aqui seu currículo"></textarea>
 
-<div class="card">
-  <h2>📌 Objetivos</h2>
-  <ul>
-    <li>Ser mais produtivo</li>
-    <li>Aprender programação</li
+      <h3>🎯 Descrição da vaga</h3>
+      <textarea id="vaga" placeholder="Cole aqui a vaga desejada"></textarea>
+
+      <button onclick="gerar()">Gerar currículo otimizado</button>
+
+      <h3>✅ Resultado</h3>
+      <pre id="resultado">Aguardando...</pre>
+    </div>
+
+    <div class="footer">
+      MVP • Currículo com IA • Produto validável
+    </div>
+  </div>
+
+<script>
+async function gerar() {
+  document.getElementById("resultado").innerText = "Gerando currículo...";
+  
+  const res = await fetch("/gerar", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      curriculo: document.getElementById("curriculo").value,
+      vaga: document.getElementById("vaga").value
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("resultado").innerText = data.resultado;
+}
+</script>
+</body>
+</html>
+`);
+});
+
+// ---------- BACKEND + IA ----------
+app.post("/gerar", async (req, res) => {
+  const { curriculo, vaga } = req.body;
+
+  const prompt = `
+Você é um especialista em recrutamento e seleção.
+Otimize o currículo abaixo para a vaga descrita.
+Use palavras-chave compatíveis com ATS.
+Seja profissional, claro e direto.
+
+CURRÍCULO:
+${curriculo}
+
+VAGA:
+${vaga}
+`;
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: \`Bearer \${OPENAI_API_KEY}\`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    res.json({ resultado: data.choices[0].message.content });
+  } catch (err) {
+    res.json({ resultado: "Erro ao gerar currículo." });
+  }
+});
+
+// ---------- SERVIDOR ----------
+app.listen(PORT, () => {
+  console.log("Servidor rodando em http://localhost:" + PORT);
+});
