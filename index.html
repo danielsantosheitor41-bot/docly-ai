@@ -1,131 +1,77 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Docly AI</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: #f8fafc;
-  padding: 20px;
-}
-h1 {
-  text-align: center;
-}
-select, input, textarea, button {
-  width: 100%;
-  margin: 8px 0;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  font-size: 16px;
-}
-button {
-  background: #22c55e;
-  font-weight: bold;
-  cursor: pointer;
-}
-pre {
-  background: #020617;
-  padding: 15px;
-  white-space: pre-wrap;
-  border-radius: 10px;
-}
-</style>
-</head>
+Imagine que você é um engenheiro de software, designer UX/UI e especialista em Inteligência Artificial. Seu objetivo é criar a **versão definitiva** do aplicativo Docly AI, levando-o do nível 1 até o nível máximo 2880. O aplicativo deve ser totalmente profissional, seguro, responsivo e pronto para monetização.  
 
-<body>
+**Objetivos do App:**
+- Criar documentos, PDFs, roteiros, trabalhos escolares e histórias originais com IA.
+- Gerar histórias sobre qualquer tema permitido, incluindo adultos ou heróis.
+- Alertar e suspender usuários que tentem gerar conteúdo proibido.
+- Interface moderna, clean e mobile-first, adaptável para PC e Android.
 
-<h1>📄 Docly AI</h1>
+**1️⃣ UX / Design**
+- Interface limpa, moderna, com gradientes suaves, sombras e ícones para cada tipo de conteúdo.
+- Cards separados: Roteiro, PDF, Trabalho Escolar, Documento Geral, História.
+- Inputs claros, placeholders inteligentes e botões grandes chamativos.
+- Timeline visual adaptável:
+  - **PC:** horizontal, cada etapa como card.
+  - **Celular:** vertical, stack de cards.
+- Preview do conteúdo gerado antes de download.
+- Feedback visual durante geração (“Gerando conteúdo…”).
 
-<select id="tipo">
-  <option value="">Escolha o tipo de conteúdo</option>
-  <option value="roteiro">🎬 Roteiro de Vídeo</option>
-  <option value="pdf">📄 Documento / PDF</option>
-  <option value="trabalho">🎓 Trabalho Escolar</option>
-</select>
+**2️⃣ Tipos de Conteúdo**
+- **Roteiro:** abertura, introdução, desenvolvimento, conclusão, encerramento, falas, CTA, dicas de câmera.
+- **PDF Profissional:** tema, telefone, conteúdo longo, exportável como PDF, sem censura.
+- **Trabalho Escolar:** nome, série, tema, introdução, desenvolvimento, conclusão, referências.
+- **Documento Geral:** adaptável a qualquer objetivo, tom ajustável (formal, criativo, acadêmico).
+- **História:** original, introdução, desenvolvimento, clímax, conclusão. Qualquer tema permitido.
 
-<input id="nome" placeholder="Nome do aluno (trabalho escolar)">
-<input id="serie" placeholder="Série / Ano (trabalho escolar)">
-<input id="telefone" placeholder="Telefone (PDF)">
-<textarea id="tema" placeholder="Tema / Assunto"></textarea>
+**3️⃣ IA e Conteúdo**
+- Conteúdo 100% original, não genérico.
+- Capaz de gerar textos longos e estruturados automaticamente.
+- Temas proibidos devem ser detectados.
+- Sistema de aviso e suspensão progressiva para usuários infratores:
+  - Aviso imediato na tela.
+  - Suspensão de 1 hora na primeira infração.
+  - Suspensão dobra a cada infração subsequente.
+  - Reset automático após expiração do bloqueio.
 
-<button onclick="gerar()">Gerar Conteúdo</button>
+**4️⃣ Sistema de Usuário (localStorage ou futuro backend)**
+- Armazenar identificador único do usuário (ID, nome, email, etc.).
+- Registrar número de infrações e tempo de bloqueio.
+- Garantir que usuários bloqueados não gerem conteúdo até a expiração da suspensão.
 
-<pre id="resultado"></pre>
+**5️⃣ Limites e Monetização**
+- Modelo freemium:
+  - Gratuito: limite diário, marca d’água nos PDFs.
+  - Premium: ilimitado, PDFs sem marca d’água, templates avançados, histórico completo.
+- Teste grátis de 3 dias.
+- CTA claros: “Desbloquear Premium”, “Criar PDF Profissional”, “Gerar Roteiro Completo”.
+- Mensagens de valor constantes: “Economize horas de trabalho”, “Conteúdo pronto para uso imediato”.
 
-<script>
-function gerar() {
-  const tipo = document.getElementById("tipo").value;
-  const nome = document.getElementById("nome").value;
-  const serie = document.getElementById("serie").value;
-  const telefone = document.getElementById("telefone").value;
-  const tema = document.getElementById("tema").value;
+**6️⃣ Responsividade e Compatibilidade**
+- Funciona perfeitamente em Android, tablets e PC.
+- Layout adaptável: timeline horizontal em PC, vertical em celular.
+- Inputs e botões responsivos, legíveis em qualquer tela.
+- Fluxo rápido de geração de conteúdo (menos cliques).
 
-  let texto = "";
+**7️⃣ Exportação e Download**
+- PDF real para download.
+- TXT para roteiros e histórias.
+- Preview antes de baixar.
+- Compatível com impressão e compartilhamento.
 
-  if (tipo === "roteiro") {
-    texto = `🎬 ROTEIRO COMPLETO DE VÍDEO
+**8️⃣ Backend Futuro (opcional)**
+- Sistema de login para salvar histórico real.
+- Integração futura com pagamentos.
+- Servidor para alertas e suspensão, se não usar localStorage.
 
-🎤 ABERTURA (FALA):
-"Fala pessoal! Hoje eu quero conversar com vocês sobre ${tema}. Se você já teve dúvidas sobre isso, fica comigo até o final porque esse vídeo vai te ajudar muito."
+**9️⃣ Resultado Esperado**
+- Aplicativo web totalmente profissional, viciante, funcional.
+- Conteúdo original para todos os tipos.
+- Sistema de alerta e suspensão seguro.
+- Visual premium, timeline adaptável, mobile-first.
+- Pronto para monetização, Level MAX 2880.
 
-📌 INTRODUÇÃO:
-No vídeo de hoje, vamos explicar de forma simples e direta tudo o que você precisa saber sobre ${tema}, com exemplos claros e informações úteis.
-
-📚 DESENVOLVIMENTO:
-Primeiro, é importante entender o que é ${tema}. Esse assunto está presente no nosso dia a dia e influencia diretamente várias situações.
-Ao longo do tempo, ${tema} foi ganhando importância por causa dos seus impactos e aplicações práticas.
-Aqui, você pode explicar exemplos, contar uma história ou dar dicas relacionadas ao tema.
-
-✅ CONCLUSÃO:
-Agora que você já entendeu melhor sobre ${tema}, fica mais fácil aplicar esse conhecimento na prática.
-Se esse conteúdo te ajudou, deixa o like, se inscreve no canal e compartilha com alguém que precisa ver isso.
-
-👋 ENCERRAMENTO:
-"Valeu por assistir até aqui e a gente se vê no próximo vídeo!"`;
-  }
-
-  if (tipo === "pdf") {
-    texto = `📄 DOCUMENTO PROFISSIONAL
-
-Tema: ${tema}
-Contato: ${telefone}
-
-INTRODUÇÃO:
-Este documento foi criado para apresentar informações completas e claras sobre ${tema}, com o objetivo de facilitar o entendimento do leitor.
-
-DESENVOLVIMENTO:
-O tema ${tema} possui diversos aspectos importantes que devem ser analisados com atenção.
-Ao longo deste documento, são apresentados conceitos, explicações e pontos relevantes, permitindo uma compreensão aprofundada do assunto.
-
-CONCLUSÃO:
-Com base nas informações apresentadas, é possível concluir que ${tema} é um assunto relevante e que merece atenção, seja para estudo, trabalho ou uso profissional.`;
-  }
-
-  if (tipo === "trabalho") {
-    texto = `🎓 TRABALHO ESCOLAR
-
-Aluno: ${nome}
-Série: ${serie}
-Tema: ${tema}
-
-INTRODUÇÃO:
-Este trabalho tem como objetivo explicar o tema ${tema}, apresentando seus principais conceitos de forma simples e educativa.
-
-DESENVOLVIMENTO:
-O tema ${tema} é estudado para compreender melhor como ele funciona e qual sua importância.
-Durante o desenvolvimento, são apresentados fatos, explicações e exemplos relacionados ao assunto.
-
-CONCLUSÃO:
-Com este trabalho, foi possível aprender mais sobre ${tema} e entender sua importância para o aprendizado do aluno.`;
-  }
-
-  document.getElementById("resultado").innerText = texto;
-}
-</script>
-
-</body>
-</html>
+**Instruções Extras**
+- Use cores e design que transmitam profissionalismo.
+- Evite textos genéricos ou repetitivos.
+- Garanta velocidade e fluidez no uso.
+- Prepare o código para fácil atualização futura.
