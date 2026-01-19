@@ -79,17 +79,17 @@ app.get("/", (req, res) => {
 </div>
 
 <script>
-let respostaIA = null;
+let respostaIA = "";
 let intervalo = null;
 
-async function gerar() {
+function gerar() {
   const resultado = document.getElementById("resultado");
   const timer = document.getElementById("timer");
 
-  respostaIA = null;
   resultado.innerText = "⏳ Processando currículo com IA...";
+  respostaIA = "";
 
-  let tempo = 30;
+  let tempo = 20;
   timer.innerText = "⏳ Gerando... " + tempo + "s";
 
   clearInterval(intervalo);
@@ -104,7 +104,7 @@ async function gerar() {
   })
   .then(res => res.json())
   .then(data => {
-    respostaIA = data.resultado;
+    respostaIA = data.resultado || "Erro ao gerar currículo.";
   });
 
   intervalo = setInterval(() => {
@@ -114,7 +114,7 @@ async function gerar() {
     if (tempo <= 0) {
       clearInterval(intervalo);
       timer.innerText = "✅ Concluído";
-      resultado.innerText = respostaIA || "Erro ao gerar currículo.";
+      resultado.innerText = respostaIA;
     }
   }, 1000);
 }
@@ -125,7 +125,7 @@ async function gerar() {
 `);
 });
 
-/* ================= BACKEND + IA ================= */
+/* ================= BACKEND + IA (SEM ERRO) ================= */
 
 app.post("/gerar", async (req, res) => {
   const { curriculo, vaga } = req.body;
@@ -135,16 +135,14 @@ app.post("/gerar", async (req, res) => {
   }
 
   const prompt = `
-Você é um recrutador especialista em ATS.
-
 Reescreva o currículo abaixo para a vaga informada.
 
-REGRAS OBRIGATÓRIAS:
-- Retorne APENAS o currículo final
-- NÃO escreva títulos, explicações ou comentários
-- NÃO diga "Aqui está" ou semelhantes
-- Linguagem profissional e direta
-- Destaque palavras-chave da vaga
+REGRAS:
+- Retorne SOMENTE o currículo final
+- NÃO inclua títulos, comentários ou explicações
+- NÃO escreva frases introdutórias
+- Linguagem profissional e objetiva
+- Use palavras-chave da vaga
 - Não invente experiências
 
 CURRÍCULO:
@@ -162,13 +160,21 @@ ${vaga}
         Authorization: \`Bearer \${OPENAI_API_KEY}\`
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }]
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.3
       })
     });
 
     const data = await response.json();
-    res.json({ resultado: data.choices[0].message.content.trim() });
+
+    if (!data.choices || !data.choices[0]) {
+      return res.json({ resultado: "Erro ao gerar currículo." });
+    }
+
+    res.json({
+      resultado: data.choices[0].message.content.trim()
+    });
 
   } catch (err) {
     res.json({ resultado: "Erro ao gerar currículo." });
