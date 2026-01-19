@@ -13,9 +13,10 @@ header {text-align:center; padding:20px; background:linear-gradient(90deg,#6a11c
 .card button {background:#22c55e; color:white; font-weight:bold; cursor:pointer; transition:0.3s;}
 .card button:hover {background:#16a34a;}
 #resultado {background:#020617; color:#f8fafc; padding:15px; border-radius:12px; white-space: pre-wrap; margin-top:10px; max-height:400px; overflow-y:auto; font-size:16px;}
+/* Timeline igual a foto */
 .timeline {display:flex; flex-direction:column; align-items:center; margin-top:20px; transition:all 0.3s ease;}
-.timeline-step {background:#1e293b; color:white; padding:12px; margin:8px 0; border-left:4px solid #22c55e; border-radius:8px; text-align:center; transition:all 0.3s ease;}
-.timeline-step.active {border-left:4px solid #3b82f6; background:#2563eb;}
+.timeline-step {background:linear-gradient(90deg,#f59e0b,#f97316); color:white; padding:12px; margin:8px 0; border-left:4px solid #facc15; border-radius:12px; text-align:center; font-weight:bold; transition:all 0.3s ease;}
+.timeline-step.active {background:linear-gradient(90deg,#f43f5e,#ec4899); border-left:4px solid #f472b6;}
 @media(min-width:768px){
   .timeline{flex-direction:row; flex-wrap:wrap; justify-content:center; gap:15px;}
   .timeline-step{flex:1 1 180px; margin:5px;}
@@ -55,7 +56,6 @@ header {text-align:center; padding:20px; background:linear-gradient(90deg,#6a11c
 </div>
 
 <script>
-// Lista de temas proibidos
 const palavrasSensiveis = ["violência extrema","drogas ilegais","ataques","conteúdo ilegal"];
 const usuarios = {};
 
@@ -88,7 +88,7 @@ async function gerar() {
     return;
   }
 
-  resultado.innerText = "⏳ Gerando conteúdo com IA... aguarde!";
+  resultado.innerText = "⏳ Gerando conteúdo com IA... aguarde...";
   timeline.innerHTML = "";
 
   let prompt = "";
@@ -111,10 +111,9 @@ async function gerar() {
     etapas = ["Introdução","Desenvolvimento","Clímax","Conclusão"];
   }
 
-  // Cria timeline visual igual à foto
+  // Timeline
   timeline.innerHTML = etapas.map(e => `<div class="timeline-step">${e}</div>`).join("");
 
-  // Chamada IA OpenAI
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -128,11 +127,16 @@ async function gerar() {
         max_tokens: 3000
       })
     });
-    const data = await response.json();
-    resultado.innerText = data.choices[0].message.content;
 
-    // Marca cada etapa como concluída
-    document.querySelectorAll(".timeline-step").forEach(step => step.classList.add("active"));
+    const data = await response.json();
+    console.log(data); // para debug
+
+    if(data.choices && data.choices.length > 0){
+      resultado.innerText = data.choices[0].message.content;
+      document.querySelectorAll(".timeline-step").forEach(step => step.classList.add("active"));
+    } else {
+      resultado.innerText = "❌ Erro: A API não retornou conteúdo. Verifique sua chave ou limite de tokens.";
+    }
 
   } catch(err){
     resultado.innerText = "❌ Erro ao gerar conteúdo: "+err;
