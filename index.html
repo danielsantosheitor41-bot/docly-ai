@@ -1,113 +1,143 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <title>Currículo com IA</title>
 
 <style>
 body {
-  background:#e5e7eb;
+  background: #e5e7eb;
   font-family: Arial, sans-serif;
 }
 
-.box {
-  max-width:600px;
-  margin:40px auto;
-  background:#f9fafb;
-  padding:25px;
-  border:2px solid #2563eb;
-  border-radius:10px;
+.container {
+  max-width: 420px;
+  margin: 40px auto;
+  background: #f9fafb;
+  border: 2px solid #2563eb;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+h2 {
+  text-align: center;
+  color: #1f2937;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 textarea {
-  width:100%;
-  height:120px;
-  margin-bottom:15px;
-  padding:10px;
-  border:2px solid #2563eb;
-  border-radius:6px;
+  width: 100%;
+  min-height: 90px;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #93c5fd;
+  border-radius: 5px;
+  resize: none;
 }
 
 button {
-  width:100%;
-  padding:12px;
-  background:#2563eb;
-  color:#fff;
-  border:none;
-  border-radius:6px;
-  font-size:16px;
+  width: 100%;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #9ca3af;
 }
 
 #timer {
-  margin-top:12px;
-  font-weight:bold;
-  color:#2563eb;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #2563eb;
 }
 
 #resultado {
-  margin-top:15px;
-  padding:15px;
-  border:2px solid #2563eb;
-  border-radius:6px;
-  white-space:pre-wrap;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #93c5fd;
+  border-radius: 5px;
+  background: #fff;
+  white-space: pre-wrap;
+  font-size: 13px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
   <h2>Seu currículo feito sob medida para cada vaga</h2>
 
-  <textarea id="curriculo" placeholder="Cole seu currículo"></textarea>
-  <textarea id="vaga" placeholder="Cole a descrição da vaga"></textarea>
+  <textarea id="curriculo" placeholder="Cole seu currículo aqui"></textarea>
 
-  <button onclick="gerar()">Gerar currículo otimizado</button>
+  <textarea id="vaga" placeholder="Cole a descrição da vaga aqui"></textarea>
+
+  <button id="btn" onclick="gerar()">Gerar currículo otimizado</button>
 
   <div id="timer"></div>
   <div id="resultado"></div>
 </div>
 
 <script>
-let respostaIA = null;
-let tempoFinalizado = false;
+let respostaIA = "";
+let timerAtivo = false;
+let intervalo = null;
 
 function gerar() {
-  respostaIA = null;
-  tempoFinalizado = false;
-
   const resultado = document.getElementById("resultado");
   const timer = document.getElementById("timer");
+  const btn = document.getElementById("btn");
 
+  btn.disabled = true;
   resultado.innerText = "";
+  respostaIA = "";
+  timerAtivo = true;
+
   let tempo = 20;
   timer.innerText = "⏳ Gerando... " + tempo + "s";
 
-  fetch("https://SEU-BACKEND.onrender.com/gerar", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      curriculo: document.getElementById("curriculo").value,
-      vaga: document.getElementById("vaga").value
-    })
-  })
-  .then(r => r.json())
-  .then(d => {
-    respostaIA = d.resultado;
-    if (tempoFinalizado) resultado.innerText = respostaIA;
-  });
-
-  const intervalo = setInterval(() => {
+  intervalo = setInterval(() => {
     tempo--;
     timer.innerText = "⏳ Gerando... " + tempo + "s";
 
     if (tempo <= 0) {
       clearInterval(intervalo);
-      tempoFinalizado = true;
+      timerAtivo = false;
       timer.innerText = "✅ Concluído";
-      if (respostaIA) resultado.innerText = respostaIA;
+      btn.disabled = false;
+
+      if (respostaIA) {
+        resultado.innerText = respostaIA;
+      }
     }
   }, 1000);
+
+  // 🔹 SIMULA IA (GitHub Pages não aceita backend)
+  setTimeout(() => {
+    respostaIA =
+`HABILIDADES
+• HTML, CSS, JavaScript, React
+
+FORMAÇÃO
+• Análise e Desenvolvimento de Sistemas
+
+EXPERIÊNCIA
+• Consumo de APIs REST
+• Boas práticas de código
+• Versionamento com Git
+
+OBJETIVO
+Atuar como desenvolvedor alinhado às necessidades da vaga.`;
+
+    if (!timerAtivo) {
+      resultado.innerText = respostaIA;
+    }
+  }, 3000); // simula resposta da IA
 }
 </script>
 
