@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Docly IA</title>
+
+<style>
 body {
   font-family: "Segoe UI", Arial, sans-serif;
   background: linear-gradient(180deg, #e5e7eb, #dbeafe);
@@ -18,6 +25,10 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 10px;
+}
+
+.purple {
+  color: #a855f7;
 }
 
 label {
@@ -101,3 +112,116 @@ button:hover {
 .welcome-box button {
   background: linear-gradient(90deg, #a855f7, #7c3aed);
 }
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME -->
+<div id="welcome">
+  <div class="welcome-box">
+    <h2>Seja bem-vindo ao <strong>Docly IA</strong></h2>
+    <p>Crie currículos <span class="purple">profissionais</span> em segundos.</p>
+    <button onclick="startApp()">Começar</button>
+  </div>
+</div>
+
+<div class="container">
+  <h1>Docly IA</h1>
+
+  <label>Nome completo</label>
+  <input id="nome">
+
+  <label>Cargo desejado</label>
+  <input id="cargo">
+
+  <label>Cidade / Estado</label>
+  <input id="local">
+
+  <label>Email</label>
+  <input id="email">
+
+  <label>Objetivo profissional</label>
+  <textarea id="objetivo"></textarea>
+
+  <label>Experiência profissional</label>
+  <textarea id="experiencia" placeholder="Cargo - Empresa - Período - Atividades"></textarea>
+
+  <label>Formação acadêmica</label>
+  <textarea id="formacao" placeholder="Curso - Instituição - Datas"></textarea>
+
+  <label>Hard skills</label>
+  <input id="hard">
+
+  <label>Soft skills</label>
+  <input id="soft">
+
+  <label>Idiomas</label>
+  <input id="idiomas">
+
+  <label>Cursos complementares</label>
+  <textarea id="cursos"></textarea>
+
+  <label>Descrição da vaga</label>
+  <textarea id="vaga"></textarea>
+
+  <button onclick="gerar()">Gerar currículo</button>
+
+  <div id="timer"></div>
+  <div id="resultado"></div>
+</div>
+
+<script>
+function startApp() {
+  document.getElementById("welcome").style.display = "none";
+}
+
+function gerar() {
+  let tempo = 5;
+  const timer = document.getElementById("timer");
+  const resultado = document.getElementById("resultado");
+
+  resultado.textContent = "";
+  timer.textContent = "Gerando em " + tempo + "s";
+
+  const interval = setInterval(() => {
+    tempo--;
+    timer.textContent = "Gerando em " + tempo + "s";
+
+    if (tempo === 0) {
+      clearInterval(interval);
+      timer.textContent = "Concluído ✅";
+
+      resultado.textContent =
+`${nome.value.toUpperCase()}
+${cargo.value}
+${local.value} | ${email.value}
+
+OBJETIVO
+${objetivo.value}
+
+EXPERIÊNCIA PROFISSIONAL
+${experiencia.value}
+
+FORMAÇÃO ACADÊMICA
+${formacao.value}
+
+HARD SKILLS
+${hard.value}
+
+SOFT SKILLS
+${soft.value}
+
+IDIOMAS
+${idiomas.value}
+
+CURSOS COMPLEMENTARES
+${cursos.value}
+`;
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
