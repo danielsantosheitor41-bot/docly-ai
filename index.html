@@ -1,195 +1,40 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Docply Studio</title>
-
-<!--
-========================================
-📁 ESTRUTURA OBRIGATÓRIA DO PROJETO
-========================================
-
-/index.html
-
-/assets
- ├─ /videos
- │   ├─ light-leak.mp4
- │   ├─ glitch.mp4
- │   ├─ smoke.mp4
- ├─ /audios
- │   ├─ whoosh.wav
- │   ├─ impact.wav
- ├─ /music
- │   ├─ trap.mp3
- │   ├─ lofi.mp3
-
-⚠️ Todos os arquivos devem ser:
-- Gratuitos
-- Livres de direitos autorais
-- Baixados de: Pixabay, Mixkit, Pexels, YouTube Audio Library
-
-========================================
--->
-
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0b0f19;
-  color: #f9fafb;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 30px;
-  background: #111827;
-  border-bottom: 1px solid #1f2933;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: bold;
-  color: #a855f7;
-}
-
-nav button {
-  background: none;
-  border: none;
-  color: #cbd5e1;
-  margin-left: 15px;
-  cursor: pointer;
-}
-
-nav button:hover { color: #38bdf8; }
-
-.hero {
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.hero span { color: #a855f7; }
-
-.section { padding: 30px; }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background: #111827;
-  border-radius: 14px;
-  padding: 14px;
-  border: 1px solid #1f2933;
-}
-
-.card video,
-.card audio {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.tag {
-  font-size: 12px;
-  color: #38bdf8;
-}
-
-.price {
-  color: #22c55e;
-  font-weight: bold;
-}
-
-.btn {
-  margin-top: 10px;
-  display: block;
-  text-align: center;
-  padding: 8px;
-  border-radius: 20px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.download {
-  background: linear-gradient(90deg,#a855f7,#38bdf8);
-  color: #020617;
-}
-
-.buy {
-  background: linear-gradient(90deg,#22c55e,#38bdf8);
-  color: #020617;
-}
-
-.upload {
-  margin-top: 40px;
-  background: #111827;
-  padding: 20px;
-  border-radius: 14px;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-  color: #6b7280;
-  border-top: 1px solid #1f2933;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <div class="logo">Docply Studio</div>
-  <nav>
-    <button onclick="filter('all')">Todos</button>
-    <button onclick="filter('overlay')">Overlays</button>
-    <button onclick="filter('audio')">Áudios</button>
-    <button onclick="filter('music')">Músicas</button>
-    <button onclick="filter('pack')">Packs</button>
-  </nav>
-</header>
-
-<section class="hero">
-  <h1>Assets para <span>edição de vídeo</span></h1>
-  <p>Overlays, áudios e músicas 100% livres de direitos autorais</p>
-</section>
-
-<section class="section">
 <div class="grid">
 
-<!-- OVERLAYS -->
+<!-- OVERLAY -->
 <div class="card overlay">
-  <video src="assets/videos/light-leak.mp4" controls></video>
+  <video controls poster="https://dummyimage.com/600x400/020617/ffffff&text=Overlay+Preview">
+    <source src="assets/videos/light-leak.mp4" type="video/mp4">
+    Seu navegador não suporta vídeo.
+  </video>
   <h3>Light Leak Overlay</h3>
   <span class="tag">MP4 • Overlay • Free</span>
   <a class="btn download" href="assets/videos/light-leak.mp4" download>Download</a>
 </div>
 
 <div class="card overlay">
-  <video src="assets/videos/glitch.mp4" controls></video>
+  <video controls poster="https://dummyimage.com/600x400/020617/ffffff&text=Overlay+Preview">
+    <source src="assets/videos/glitch.mp4" type="video/mp4">
+  </video>
   <h3>Glitch Overlay</h3>
   <span class="tag">MP4 • Overlay • Free</span>
   <a class="btn download" href="assets/videos/glitch.mp4" download>Download</a>
 </div>
 
-<div class="card overlay">
-  <video src="assets/videos/smoke.mp4" controls></video>
-  <h3>Smoke Overlay</h3>
-  <span class="tag">MP4 • Overlay • Free</span>
-  <a class="btn download" href="assets/videos/smoke.mp4" download>Download</a>
-</div>
-
 <!-- SOUND FX -->
 <div class="card audio">
-  <audio src="assets/audios/whoosh.wav" controls></audio>
+  <audio controls>
+    <source src="assets/audios/whoosh.wav" type="audio/wav">
+    Seu navegador não suporta áudio.
+  </audio>
   <h3>Whoosh Transition</h3>
   <span class="tag">WAV • Sound FX • Free</span>
   <a class="btn download" href="assets/audios/whoosh.wav" download>Download</a>
 </div>
 
 <div class="card audio">
-  <audio src="assets/audios/impact.wav" controls></audio>
+  <audio controls>
+    <source src="assets/audios/impact.wav" type="audio/wav">
+  </audio>
   <h3>Impact Hit</h3>
   <span class="tag">WAV • Sound FX • Free</span>
   <a class="btn download" href="assets/audios/impact.wav" download>Download</a>
@@ -197,14 +42,18 @@ footer {
 
 <!-- MUSIC -->
 <div class="card music">
-  <audio src="assets/music/trap.mp3" controls></audio>
+  <audio controls>
+    <source src="assets/music/trap.mp3" type="audio/mpeg">
+  </audio>
   <h3>Trap Beat</h3>
   <span class="tag">MP3 • Music • No Copyright</span>
   <a class="btn download" href="assets/music/trap.mp3" download>Download</a>
 </div>
 
 <div class="card music">
-  <audio src="assets/music/lofi.mp3" controls></audio>
+  <audio controls>
+    <source src="assets/music/lofi.mp3" type="audio/mpeg">
+  </audio>
   <h3>Lo-Fi Chill</h3>
   <span class="tag">MP3 • Music • No Copyright</span>
   <a class="btn download" href="assets/music/lofi.mp3" download>Download</a>
@@ -212,7 +61,9 @@ footer {
 
 <!-- PACK -->
 <div class="card pack">
-  <video src="assets/videos/light-leak.mp4" controls></video>
+  <video controls poster="https://dummyimage.com/600x400/020617/ffffff&text=Pack+Preview">
+    <source src="assets/videos/light-leak.mp4" type="video/mp4">
+  </video>
   <h3>Pack Viral TikTok</h3>
   <span class="tag">ZIP • Pack Premium</span>
   <p class="price">R$ 19,90</p>
@@ -220,32 +71,3 @@ footer {
 </div>
 
 </div>
-
-<div class="upload">
-  <h3>Enviar seu conteúdo</h3>
-  <p>(upload real será ativado depois)</p>
-  <input type="file"><br><br>
-  <button class="btn download">Enviar</button>
-</div>
-</section>
-
-<footer>
-© 2026 Docply Studio — Assets livres para criadores
-</footer>
-
-<script>
-function filter(type) {
-  document.querySelectorAll('.card').forEach(card => {
-    card.style.display =
-      type === 'all' || card.classList.contains(type)
-      ? 'block' : 'none';
-  });
-}
-
-function comprar() {
-  alert("Pagamento será conectado via Stripe / Pix.");
-}
-</script>
-
-</body>
-</html>
