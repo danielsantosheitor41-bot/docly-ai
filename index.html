@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Docly IA</title>
 
 <style>
@@ -24,18 +24,12 @@ body {
 
 h1 {
   text-align: center;
-  margin-bottom: 10px;
-}
-
-.purple {
-  color: #a855f7;
 }
 
 label {
   font-weight: 600;
   margin-top: 14px;
   display: block;
-  color: #111827;
 }
 
 input, textarea {
@@ -44,182 +38,56 @@ input, textarea {
   margin-top: 6px;
   border-radius: 8px;
   border: 1px solid #cbd5e1;
-  font-size: 14px;
-}
-
-input:focus, textarea:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px #bfdbfe;
 }
 
 button {
   margin-top: 24px;
   width: 100%;
   padding: 14px;
-  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  background: #2563eb;
   color: white;
   border: none;
   border-radius: 10px;
-  font-size: 16px;
   cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(37,99,235,0.35);
-}
-
-#timer {
-  text-align: center;
-  margin-top: 14px;
-  font-weight: bold;
-  color: #1d4ed8;
-}
-
-#resultado {
-  margin-top: 24px;
-  white-space: pre-wrap;
-  border: 1px solid #2563eb;
-  padding: 18px;
-  border-radius: 12px;
-  background: #ffffff;
-  font-size: 14px;
-  line-height: 1.6;
 }
 
 #welcome {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #111827, #1f2937);
+  background: #111827;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
-}
-
-.welcome-box {
-  background: #020617;
-  padding: 30px;
-  border-radius: 16px;
-  text-align: center;
-  max-width: 420px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-}
-
-.welcome-box button {
-  background: linear-gradient(90deg, #a855f7, #7c3aed);
 }
 </style>
 </head>
 
 <body>
 
-<!-- WELCOME -->
 <div id="welcome">
-  <div class="welcome-box">
-    <h2>Seja bem-vindo ao <strong>Docly IA</strong></h2>
-    <p>Crie currículos <span class="purple">profissionais</span> em segundos.</p>
-    <button onclick="startApp()">Começar</button>
+  <div>
+    <h2>Seja bem-vindo ao Docly IA</h2>
+    <button onclick="document.getElementById('welcome').style.display='none'">
+      Começar
+    </button>
   </div>
 </div>
 
 <div class="container">
   <h1>Docly IA</h1>
 
-  <label>Nome completo</label>
+  <label>Nome</label>
   <input id="nome">
 
-  <label>Cargo desejado</label>
-  <input id="cargo">
-
-  <label>Cidade / Estado</label>
-  <input id="local">
-
-  <label>Email</label>
-  <input id="email">
-
-  <label>Objetivo profissional</label>
-  <textarea id="objetivo"></textarea>
-
-  <label>Experiência profissional</label>
-  <textarea id="experiencia" placeholder="Cargo - Empresa - Período - Atividades"></textarea>
-
-  <label>Formação acadêmica</label>
-  <textarea id="formacao" placeholder="Curso - Instituição - Datas"></textarea>
-
-  <label>Hard skills</label>
-  <input id="hard">
-
-  <label>Soft skills</label>
-  <input id="soft">
-
-  <label>Idiomas</label>
-  <input id="idiomas">
-
-  <label>Cursos complementares</label>
-  <textarea id="cursos"></textarea>
-
-  <label>Descrição da vaga</label>
-  <textarea id="vaga"></textarea>
-
-  <button onclick="gerar()">Gerar currículo</button>
-
-  <div id="timer"></div>
+  <button onclick="gerar()">Gerar</button>
   <div id="resultado"></div>
 </div>
 
 <script>
-function startApp() {
-  document.getElementById("welcome").style.display = "none";
-}
-
 function gerar() {
-  let tempo = 5;
-  const timer = document.getElementById("timer");
-  const resultado = document.getElementById("resultado");
-
-  resultado.textContent = "";
-  timer.textContent = "Gerando em " + tempo + "s";
-
-  const interval = setInterval(() => {
-    tempo--;
-    timer.textContent = "Gerando em " + tempo + "s";
-
-    if (tempo === 0) {
-      clearInterval(interval);
-      timer.textContent = "Concluído ✅";
-
-      resultado.textContent =
-`${nome.value.toUpperCase()}
-${cargo.value}
-${local.value} | ${email.value}
-
-OBJETIVO
-${objetivo.value}
-
-EXPERIÊNCIA PROFISSIONAL
-${experiencia.value}
-
-FORMAÇÃO ACADÊMICA
-${formacao.value}
-
-HARD SKILLS
-${hard.value}
-
-SOFT SKILLS
-${soft.value}
-
-IDIOMAS
-${idiomas.value}
-
-CURSOS COMPLEMENTARES
-${cursos.value}
-`;
-    }
-  }, 1000);
+  document.getElementById("resultado").innerText =
+    document.getElementById("nome").value;
 }
 </script>
 
