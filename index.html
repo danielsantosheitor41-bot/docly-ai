@@ -1,168 +1,103 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Docply Studio</title>
-
-<style>
 body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(180deg, #e5e7eb, #dbeafe);
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
+  padding: 0;
 }
 
-header {
-  padding: 16px 30px;
-  background: #020617;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #1e293b;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: bold;
-  color: #a855f7;
-}
-
-nav button {
-  background: none;
-  border: none;
-  color: #94a3b8;
-  margin-left: 14px;
-  cursor: pointer;
-}
-nav button:hover { color: #38bdf8; }
-
-.hero {
-  text-align: center;
-  padding: 60px 20px;
-}
-.hero span { color: #a855f7; }
-
-.section { padding: 30px; }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background: #020617;
+.container {
+  max-width: 720px;
+  margin: 50px auto;
+  background: #f9fafb;
+  border: 2px solid #2563eb;
   border-radius: 14px;
-  padding: 14px;
-  border: 1px solid #1e293b;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
 }
 
-video, audio {
-  width: 100%;
-  border-radius: 10px;
-}
-
-.tag {
-  font-size: 12px;
-  color: #38bdf8;
-}
-
-.price {
-  color: #22c55e;
-  font-weight: bold;
-}
-
-.btn {
-  display: block;
-  margin-top: 10px;
-  padding: 8px;
-  border-radius: 20px;
+h1 {
   text-align: center;
+  margin-bottom: 10px;
+}
+
+label {
+  font-weight: 600;
+  margin-top: 14px;
+  display: block;
+  color: #111827;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+button {
+  margin-top: 24px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
   cursor: pointer;
-  background: linear-gradient(90deg,#a855f7,#38bdf8);
-  color: #020617;
-  text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
 }
 
-.buy {
-  background: linear-gradient(90deg,#22c55e,#38bdf8);
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(37,99,235,0.35);
 }
-</style>
-</head>
 
-<body>
-
-<header>
-  <div class="logo">Docply Studio</div>
-  <nav>
-    <button onclick="filter('all')">Todos</button>
-    <button onclick="filter('overlay')">Overlays</button>
-    <button onclick="filter('audio')">Áudios</button>
-    <button onclick="filter('music')">Músicas</button>
-    <button onclick="filter('pack')">Packs</button>
-  </nav>
-</header>
-
-<section class="hero">
-  <h1>Assets para <span>edição de vídeo</span></h1>
-  <p>Conteúdos reais, gratuitos e sem copyright</p>
-</section>
-
-<section class="section">
-<div class="grid">
-
-<!-- OVERLAYS -->
-<div class="card overlay">
-  <video controls src="assets/overlays/glitch.mp4"></video>
-  <h3>Glitch Overlay</h3>
-  <span class="tag">MP4 • Free</span>
-  <a class="btn" download href="assets/overlays/glitch.mp4">Download</a>
-</div>
-
-<div class="card overlay">
-  <video controls src="assets/overlays/light-leak.mp4"></video>
-  <h3>Light Leak Overlay</h3>
-  <span class="tag">MP4 • Free</span>
-  <a class="btn" download href="assets/overlays/light-leak.mp4">Download</a>
-</div>
-
-<!-- AUDIO -->
-<div class="card audio">
-  <h3>Whoosh FX</h3>
-  <audio controls src="assets/audio/whoosh.mp3"></audio>
-  <span class="tag">Sound FX</span>
-  <a class="btn" download href="assets/audio/whoosh.mp3">Download</a>
-</div>
-
-<!-- MUSIC -->
-<div class="card music">
-  <h3>Lo-Fi Beat</h3>
-  <audio controls src="assets/music/lofi.mp3"></audio>
-  <span class="tag">Music • No Copyright</span>
-  <a class="btn" download href="assets/music/lofi.mp3">Download</a>
-</div>
-
-<!-- PACK -->
-<div class="card pack">
-  <h3>Starter Pack</h3>
-  <span class="tag">ZIP • Pack</span>
-  <p class="price">R$ 0,00</p>
-  <a class="btn buy" download href="assets/packs/starter-pack.zip">
-    Baixar Pack
-  </a>
-</div>
-
-</div>
-</section>
-
-<script>
-function filter(type) {
-  document.querySelectorAll('.card').forEach(card => {
-    card.style.display =
-      type === 'all' || card.classList.contains(type)
-      ? 'block' : 'none';
-  });
+#timer {
+  text-align: center;
+  margin-top: 14px;
+  font-weight: bold;
+  color: #1d4ed8;
 }
-</script>
 
-</body>
-</html>
+#resultado {
+  margin-top: 24px;
+  white-space: pre-wrap;
+  border: 1px solid #2563eb;
+  padding: 18px;
+  border-radius: 12px;
+  background: #ffffff;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#welcome {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #111827, #1f2937);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.welcome-box {
+  background: #020617;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 420px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.welcome-box button {
+  background: linear-gradient(90deg, #a855f7, #7c3aed);
+}
